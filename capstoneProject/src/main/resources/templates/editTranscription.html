@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title data-th-text="|Time to Edit the Transcription Called ${transcription.name}|"></title>
+  </head>
+  <body>
+   <h1> Edit your transcription for <span class="alert alert-warning" data-th-text="${post.name}"></span>
+    		by <span class="alert alert-warning" data-th-text="${post.author}"></span>:</h1>
+  	<hr />
+    <h2> <span class="alert alert-warning" data-th-text="${post.content}"></span></h2>
+    <hr />
+    <h3>Again, use the tables below</h3>
+    <h4> <a data-th-href="|/app/timeline|">Or, Again, Go Back to the Timeline</a></h4>
+   
+    <form data-th-action="|/app/editTranscription/${transcription.id}|" method="POST" data-th-object="${transcription}">
+    <textarea class="form-control" id="text" rows=10 cols=80 data-th-field="*{content}" data-th-errorclass="is-invalid">
+	</textarea>
+		<div class="invalid-feedback" data-th-errors="*{content}"></div>
+	<h2>Consonants</h2>
+	<table class="table">
+  		<thead>
+    		<tr>
+      			<th scope="col"></th>
+     			 <th scope="col">Bilabial</th>
+      			<th scope="col">Labiodental</th>
+      			<th scope="col">Dental</th>
+      			<th scope="col">Alveolar</th>
+      			<th scope="col">Postalveolar</th>
+      			<th scope="col">Retroflex</th>
+      			<th scope="col">Palatal</th>
+      			<th scope="col">Velar</th>
+      			<th scope="col">Uvular</th>
+      			<th scope="col">Pharyngeal</th>
+      			<th scope="col">Glottal</th>
+    		</tr>
+  		</thead>
+  		<tbody>
+    		<tr>
+      			<th scope="row">Stop</th>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessBilabialStop()">&#112;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedBilabialStop()">&#98;</button>
+      				</td>
+      				<td>
+      					<span>none |</span>
+      					<span> none</span>
+      				</td>
+      				<td>
+      					<span>none |</span>
+      					<span> none</span>
+      				</td>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessAlveolarStop()">&#116;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedAlveolarStop()">&#100;</button>
+      				</td>
+      				<td>
+      					<span>none |</span>
+      					<span> none</span>
+      				</td>
+      				<td><button class="btn btn-primary" onClick="event.preventDefault(); voicelessRetroflexStop()">&#648;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedRetroflexStop()">&#598;</button>
+      				</td>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessPalatalStop()">&#99;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedPalatalStop()">&#607;</button>
+      				</td>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessVelarStop()">&#107;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedVelarStop()">&#103;</button>
+      				</td>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessUvularStop()">&#113;</button>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedUvularStop()">&#71;</button>
+      				</td>
+      				<td>
+      					<span>none |</span>
+      					<span> n.p.</span>
+      				</td>
+      				<td>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); glottalStop()">&#660;</button>
+      					<span>n.p.</span>
+      				</td>	
+    		</tr>
+    		<tr>
+      			<th scope="row">Nasal</th>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); bilabialNasal()">&#109;</button>
+      				</td>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); labiodentalNasal()">&#625;</button>
+      				</td>
+      				<td></td>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); alveolarNasal()">&#110;</button>
+      				</td>
+      				<td></td>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedRetroflexNasal()">&#627;</button>
+      				</td>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedPalatalNasal()">&#626;</button>
+      				</td>
+      				<td>
+      					<span>none</span>
+    					<button class="btn btn-danger" onClick="event.preventDefault(); voicedVelarNasal()">&#7505;</button>
+      				</td>
+      				<td>
+      					<span>none</span>
+      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedUvularNasal()">&#628;</button>
+      				</td>
+      				<td>
+      					<span>n.p. |</span>
+      					<span> n.p.</span>
+      				</td>
+      				<td>
+      					<span>n.p. |</span>
+      					<span> n.p.</span>
+      				</td>
+			</tr>
+   			<tr>
+      			<th scope="row">Trill</th>
+     				 <td>
+     				 	<span>none</span>
+     				 	<button class="btn btn-primary" onClick="event.preventDefault(); voicedBilabialTrill()">&#665;</button>
+     				 </td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+  			<tr>
+      			<th scope="row">Flap</th>
+     				 <td>Larry</td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+  			<tr>
+      			<th scope="row">Fricative</th>
+     				 <td>Larry</td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+  			<tr>
+      			<th scope="row">Lateral Fricative</th>
+     				 <td>Larry</td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+  			<tr>
+      			<th scope="row">Approximant</th>
+     				 <td>Larry</td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+  			<tr>
+      			<th scope="row">Lateral Approximant</th>
+     				 <td>Larry</td>
+      				<td>the Bird</td>
+      				<td>@twitter</td>
+    		</tr>
+		</tbody>
+	</table>
+	
+	<button type="submit" class="btn btn-secondary">Transcribe Away</button>
+	</form>
+	
+	<script>
+		const voicelessBilabialStop =  () => {
+		document.getElementById("text").value+= "\u0070";
+		}
+
+		const voicedBilabialStop = () => {
+		document.getElementById("text").value+= "\u0062";
+		}
+		
+		const voicelessAlveolarStop = () => {
+			document.getElementById("text").value+= "\u0074";
+		}
+		
+		const voicedAlveolarStop = () => {
+			document.getElementById("text").value+= "\u0064";
+		}
+		
+		const voicelessRetroflexStop = () => {
+			document.getElementById("text").value+= "\u0288";
+		}
+		
+		const voicedRetroflexStop = () => {
+			document.getElementById("text").value+= "\u0256";
+		}
+		
+		const voicelessPalatalStop = () => {
+			document.getElementById("text").value+= "\u1D04";
+		}
+		
+		const voicedPalatalStop = () => {
+			document.getElementById("text").value+= "\u025F";
+		}
+		
+		const voicelessVelarStop = () => {
+			document.getElementById("text").value+= "\u006b";
+		}
+		
+		const voicedVelarStop = () => {
+			document.getElementById("text").value+= "\u0067";
+		}
+		
+		const voicelessUvularStop = () => {
+			document.getElementById("text").value+= "\u0071";
+		}
+		
+		const voicedUvularStop = () => {
+			document.getElementById("text").value+= "\u0047";
+		}
+		
+		const glottalStop = () => {
+			document.getElementById("text").value+= "\u0294";
+		}
+
+		const bilabialNasal = () => {
+			document.getElementById("text").value+= "\u006D";
+		}
+		
+		const labiodentalNasal = () => {
+			document.getElementById("text").value+= "\u0271";
+		}
+		
+		const alveolarNasal = () => {
+			document.getElementById("text").value+= "\u006E";
+		}
+		
+		const voicedRetroflexNasal = () => {
+			document.getElementById("text").value+= "\u0273";
+		}
+		
+		const voicedPalatalNasal = () => {
+			document.getElementById("text").value+= "\u0272";
+		}
+		
+		const voicedVelarNasal = () => {
+			document.getElementById("text").value+= "\u1D51";
+		}
+		
+		const voicedUvularNasal = () => {
+			document.getElementById("text").value+= "\u0274";
+		}
+		
+		const voicedBilabialTrill = () => {
+			document.getElementById("text").value+= "\u0299";
+		}
+		
+	</script>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

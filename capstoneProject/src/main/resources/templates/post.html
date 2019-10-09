@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+
+<title
+	data-th-text="|Make a Post, ${@sessionManager.loggedInUser.username}|"></title>
+</head>
+<body>
+	<h1
+		data-th-text="|Go On and Make Your Post, ${@sessionManager.loggedInUser.username}|"></h1>
+	<br />
+	<h2>
+		<a data-th-href="|/app/timeline|">Or Go Back to the Timeline</a>
+	</h2>
+	<br />
+	<div data-th-if="${postLanguageChoice}">
+		<a data-th-href="|/app/postLanguagePreference/#{language}|"> <span
+			data-th-text="#{languagePreference}"></span></a>
+	</div>
+	
+	<form
+		data-th-action="|/app/post/${@sessionManager.loggedInUser.profile.id}|"
+		method="POST" data-th-object="${post}">
+		<label for="name of post">Name of Post</label> <input type="text"
+			id="name" size="30" class="form-control"
+			placeholder="Please give the post a decent name, between four and twenty-five characters"
+			data-th-field="*{name}" data-th-errorclass="is-invalid" />
+		<div class="invalid-feedback" data-th-errors="*{name}"></div>
+		<br /> <label for="content of post">The Post Itself</label>
+		<textarea class="form-control" id="content"
+			placeholder="At least five characters and no more than one-hundred and fifty"
+			rows="6" cols="150" data-th-field="*{content}"
+			data-th-errorclass="is-invalid">
+		</textarea>
+		<div class="invalid-feedback" data-th-errors="*{content}"></div>
+		<button type="submit" class="btn btn-primary">Post It</button>
+	</form>
+	<br />
+	<table class="table table-bordered">
+
+		<tbody>
+			<tr>
+				<th scope="row">lower-case</th>
+				<td>a accent grave</td>
+				<td>a circonflex</td>
+				<td>pressed-together ae</td>
+				<td>e accent grave</td>
+				<td>e accent aigu</td>
+				<td>e circonflex</td>
+				<td>dotted e</td>
+				<td>i circonflex</td>
+				<td>dotted i</td>
+				<td>o circonflex</td>
+				<td>u accent grave</td>
+				<td>u circonflex</td>
+				<td>dotted u</td>
+				<td>c with circonflex</td>
+				<td>pressed-together oe</td>
+
+				<td>FOLLOWING ARE for SPANISH</td>
+				<td>a accent aigu</td>
+				<td>e accent aigu</td>
+				<td>i accent aigu</td>
+				<td>o accent aigu</td>
+				<td>u accent aigu</td>
+				<td>dotted u</td>
+				<td>n with tilde</td>
+				<td>upside-down question mark</td>
+				<td>upside-down exclamation mark</td>
+			</tr>
+			<tr>
+				<th scope="row">upper-case of the same ones</th>
+			</tr>
+		</tbody>
+	</table>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
+</html>

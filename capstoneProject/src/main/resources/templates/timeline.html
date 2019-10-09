@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+
+<title data-th-text="#{timelineTitle}">Timeline</title>
+</head>
+<body>
+	<h1 align="center" class="alert alert-danger" data-th-if="${failure}"
+		data-th-text="#{alreadyLoggedIn}">
+		<br />
+	</h1>
+	<h1 align="center">
+		<span class="alert alert-success" role="alert"> <span
+			data-th-text="|#{timelineWelcome}, ${@sessionManager.loggedInUser.username}|"></span>
+		</span>
+	</h1>
+	<br />
+	<h2 align="center">
+		<span class="alert alert-secondary" role="alert"> <a
+			data-th-href="|/app/profile/${@sessionManager.loggedInUser.id}|"
+			class="alert-link"
+			data-th-text="|#{profileLinkTimeline}, ${@sessionManager.loggedInUser.username}|">
+		</a>
+		</span>
+	</h2>
+	<br />
+	<h3 align="center">
+		<span class="alert alert-primary" role="alert"> <a
+			data-th-href="|/app/profiles|" class="alert-link"
+			data-th-text="#{otherProfilesTimeline}">Go To The Other Profiles</a>
+		</span>
+	</h3>
+	<br />
+	<h4 align="center">
+		<span class="alert alert-warning" role="alert"> <a
+			data-th-href="|/app/post/${@sessionManager.loggedInUser.id}|"
+			data-th-text="#{makePostTimeline}">Make a Post</a>
+		</span>
+	</h4>
+	<br />
+	<form data-th-action="|/app/logout|" method="POST">
+		<h5 align="center">
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-dark" data-toggle="modal"
+				data-target="#exampleModal" data-th-text="#{logoutTimeline}">Log
+				Out if You're Over This App</button>
+		</h5>
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel"
+							data-th-text="#{logoutTimelineModal}">Log Out</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" data-th-text="#{logoutTimelineTwo}">Are
+						you sure that you are over this app?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" data-th-text="#{logoutTimelineTwoNo}">No</button>
+						<button type="submit" class="btn btn-primary"
+							data-th-text="#{logoutTimelineTwoYes}">Yes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<br />
+	<br />
+	<h2 align="center">
+		<span class="alert alert-success"
+			data-th-text="|Here ${@applicationManager.verb} The ${@applicationManager.numPosts} 
+				${@applicationManager.plural}|">Here
+			Are The Posts:</span>
+	</h2>
+	<hr />
+	<div data-th-if="${success}">
+		<div align="center">
+			<span class="alert alert-primary" data-th-text="${success}"></span>
+			<hr />
+		</div>
+	</div>
+	<div align="center" data-th-each="post : ${posts}">
+		<div>
+			<br /> <span class="alert alert-warning" data-th-text="${post.name}">post
+				name</span> <br /> <br />
+			<div class="panel-body">
+				<span class="alert alert-warning" data-th-text="${post.content}"></span>
+				<br /> <br />
+			</div>
+		</div>
+		<div class="panel-footer">
+			<span class="alert alert-warning"
+				data-th-text="|#{postDateTimeline} ${post.postDate}, 
+					#{postTimeTimeline} ${post.postTime}, #{necessaryPrepositionTimelinePost} |"></span>
+			<br /> <br />
+			<div
+				data-th-if="${@sessionManager.loggedInUser.id == post.author.id}">
+				<span class="alert alert-warning"
+					data-th-text="#{postAuthorLoggedInUser}">you</span>
+			</div>
+			<div
+				data-th-unless="${@sessionManager.loggedInUser.id == post.author.id}">
+				<span class="alert alert-warning"><a
+					data-th-href="|/app/profile/${post.author.id}|"
+					data-th-text="${post.author.username}"></a></span>
+			</div>
+		</div>
+		<div data-th-if="${@sessionManager.loggedInUser.id == post.author.id}">
+			<div data-th-if="${post.editableByAuthor}">
+				<br /> <br /> <span class="alert alert-primary" role="alert">
+					<a data-th-href="|/app/editPost/${post.id}|"> <span
+						data-th-text="|#{editPostOfferTimeline} ${@sessionManager.loggedInUser.username}|"></span></a>
+				</span>
+			</div>
+			<div data-th-if="${post.deletableByAuthor}">
+				<br />
+				<form id="deletePost" data-th-action="|/app/deletePost/${post.id}|"
+					method="POST">
+					<button class="btn btn-warning" id="deletePostButton"
+						data-th-text="|#{deletePostOfferTimeline} ${@sessionManager.loggedInUser.username}|"></button>
+				</form>
+			</div>
+		</div>
+
+		<div data-th-if="${post.postComments}">
+			<section data-th-each="postComment : ${post.postComments}">
+				<br /> <br /> <span class="alert alert-secondary"
+					data-th-text="${postComment.content}"></span> <br /> <br /> <span
+					class="alert alert-secondary">post comment made by</span>
+				<div
+					data-th-if="${postComment.author.id == @sessionManager.loggedInUser.id}">
+					<br /> <span class="alert alert-secondary"
+						data-th-text="|you, on ${postComment.commentDate},
+								at ${postComment.commentTime}|"></span>
+				</div>
+				<br /> <br />
+				<div
+					data-th-unless="${postComment.author.id == @sessionManager.loggedInUser.id}">
+					<span class="alert alert-secondary"> <a
+						data-th-href="|/app/${postComment.author.username}|"
+						data-th-text="${postComment.author}"></a> <span
+						data-th-text="|, on ${postComment.commentDate}, at ${postComment.commentTime}|"></span>
+					</span> <br />
+				</div>
+				<div
+					data-th-if="${postComment.author.id == @sessionManager.loggedInUser.id}">
+					<div data-th-if="${postComment.deletableByAuthor}">
+						<form id="deletePostComment"
+							data-th-action="|/app/deletePostComment/${postComment.id}|"
+							method="POST">
+							<button id="deletePostCommentButton" class="btn btn-light"
+								data-th-text="|DELETE this post comment, ${@sessionManager.loggedInUser.username}|"></button>
+						</form>
+					</div>
+				</div>
+				<div
+					data-th-if="${post.author.id == @sessionManager.loggedInUser.id}">
+					<div data-th-if="${post.commentableByAuthor}">
+						<br />
+						<form method="GET" data-th-action="|/app/postComment/${post.id}|">
+							<button class="btn btn-outline-warning" type="submit">Comment
+								on this post</button>
+						</form>
+					</div>
+				</div>
+			</section>
+			<div
+				data-th-if="${post.author.id ne @sessionManager.loggedInUser.id}">
+				<br />
+				<form method="GET" data-th-action="|/app/postComment/${post.id}|">
+					<button class="btn btn-outline-warning" type="submit">Comment
+						on this post</button>
+				</form>
+			</div>
+		</div>
+		<div
+			data-th-unless="${@sessionManager.loggedInUser.id == post.author.id}">
+			<div data-th-if="${post.hasTranscription}"></div>
+			<div data-th-unless="${post.hasTranscription}">
+				<br /> <br /> <span class="alert alert-success" role="alert">
+					<a data-th-href="|/app/transcription/${post.id}|"
+					data-th-text="|#{transcriptionOfferTimeline} 
+							${@sessionManager.loggedInUser.username}|"></a>
+				</span>
+			</div>
+
+		</div>
+		<div data-th-if="${post.transcription}">
+			<br /> <span class="alert alert-info"
+				data-th-text="${post.transcription.name}"></span> <br /> <br /> <span
+				class="alert alert-info"
+				data-th-text="${post.transcription.content}">comment</span> <br />
+			<br /> <span class="alert alert-info"> transcription made by
+			</span>
+			<div
+				data-th-if="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
+				<br /> <span class="alert alert-info"
+					data-th-text="|you, on ${post.transcription.transcriptionDate},
+								at ${post.transcription.transcriptionTime}|"></span>
+				<br /> <br />
+			</div>
+			<div
+				data-th-unless="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
+				<br /> <span class="alert alert-info"><a
+					data-th-href="|/app/profile/${post.transcription.author.id}|"
+					data-th-text="${post.transcription.author}"></a> <span
+					class="alert alert-info"
+					data-th-text="|, on ${post.transcription.transcriptionDate}, 
+									 	at ${post.transcription.transcriptionTime}|">
+				</span> </span> <br /> <br />
+			</div>
+			<div
+				data-th-if="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
+				<div data-th-if="${post.transcription.editableByAuthor}">
+					<a data-th-href="|/app/editTranscription/${post.transcription.id}|">
+						<span
+						data-th-text="|Click here to edit your transcription, ${@sessionManager.loggedInUser.username}|"></span>
+					</a>
+				</div>
+				<div data-th-if="${post.transcription.deletableByAuthor}">
+					<br />
+					<form id="deleteTranscription"
+						data-th-action="|/app/deleteTranscription/${post.transcription.id}|"
+						method="POST">
+						<button id="deleteTranscriptionButton" class="btn btn-info"
+							data-th-text="|DELETE this transcription, ${@sessionManager.loggedInUser.username}|"></button>
+					</form>
+				</div>
+			</div>
+
+			<div data-th-if="${post.transcription.transcriptionComments}">
+				<div
+					data-th-each="transcriptionComment : ${post.transcription.transcriptionComments}">
+					<br /> <span class="alert alert-danger"
+						data-th-text="${transcriptionComment.content}">comment</span> <br />
+					<br /> <span class="alert alert-danger">transcription
+						comment made by</span>
+					<div
+						data-th-if="${@sessionManager.loggedInUser.id == transcriptionComment.author.id}">
+						<br /> <span class="alert alert-danger"
+							data-th-text="|you, on ${transcriptionComment.commentDate},
+						 	at ${transcriptionComment.commentTime}|">
+						</span> <br /> <br />
+					</div>
+					<div
+						data-th-unless="${@sessionManager.loggedInUser.id == transcriptionComment.author.id}">
+						<br /> <span class="alert alert-danger"> <a
+							data-th-href="|/app/profile/${transcriptionComment.author.id}|"
+							data-th-text="${transcriptionComment.author}"></a> <span
+							class="alert alert-danger"
+							data-th-text="|, on ${transcriptionComment.commentDate},
+									at ${transcriptionComment.commentTime}|"></span>
+						</span> <br /> <br />
+					</div>
+					<div
+						data-th-if="${transcriptionComment.author.id == @sessionManager.loggedInUser.id}">
+						<div data-th-if="${transcriptionComment.deletableByAuthor}">
+							<form id="deleteTranscriptionComment"
+								data-th-action="|/app/deleteTranscriptionComment/${transcriptionComment.id}|"
+								method="POST">
+								<button id="deleteTranscriptionCommentButton"
+									class="btn btn-danger"
+									data-th-text="|DELETE this transcription comment, ${@sessionManager.loggedInUser.username}|"></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				data-th-if="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
+				<div data-th-if="${post.transcription.hasComments}">
+					<br />
+					<form method="GET"
+						data-th-action="|/app/transcriptionComment/${post.transcription.id}|">
+						<button class="btn btn-outline-danger" type="submit">Comment
+							on this transcription</button>
+					</form>
+				</div>
+				<div data-th-unless="${post.transcription.hasComments}"></div>
+			</div>
+			<div
+				data-th-unless="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
+				<form method="GET"
+					data-th-action="|/app/transcriptionComment/${post.transcription.id}|">
+					<button class="btn btn-outline-danger" type="submit">Comment
+						on this transcription</button>
+				</form>
+			</div>
+		</div>
+		<hr />
+	</div>
+
+	<nav>
+		<ul class="pagination">
+			<li class="page-item"
+				data-th-classappend="${posts.first ? 'disabled' : ''}"><a
+				class="page-link" data-th-href="|/app/timeline/${posts.number}|">Previous</a>
+			</li>
+
+			<li class="page-item"
+				data-th-each="pageNumber : ${#numbers.sequence(1, posts.totalPages)}"
+				data-th-classappend="${pageNumber == posts.number+1 ? 'active' : ''}">
+				<a class="page-link" data-th-href="|/app/timeline/${pageNumber}|"
+				data-th-text="${pageNumber}">#</a>
+			</li>
+
+			<li class="page-item"
+				data-th-classappend="${posts.last ? 'disabled' : ''}"><a
+				class="page-link" data-th-href="|/app/timeline/${posts.number+2}|">Next</a>
+			</li>
+		</ul>
+	</nav>
+
+	<script>
+		const handlePost = e => {
+			e.preventDefault();
+			if (confirm("Do you really want to delete this post?")) {
+				document.querySelector("#deletePost").submit();
+			}
+		};
+		document.querySelector("#deletePostButton").addEventListener('click', handlePost);
+		
+		const handleTranscription = e => {
+			e.preventDefault();
+			if (confirm("Do you really want to delete this transcription?")) {
+				document.querySelector("#deleteTranscription").submit();
+			}
+		};
+		document.querySelector("#deleteTranscriptionButton").addEventListener('click', handleTranscription);
+		
+		const handleTranscriptionComment = e => {
+			e.preventDefault();
+			if (confirm("Do you really want to delete this transcription comment?")) {
+				document.querySelector("#deleteTranscriptionComment").submit();
+			}
+		};
+		document.querySelector("#deleteTranscriptionCommentButton").addEventListener('click', handleTranscriptionComment);
+		
+		const handlePostComment = e => {
+			e.preventDefault();
+			if (confirm("Do you really want to delete this post comment?")) {
+				document.querySelector("#deletePostComment").submit();
+			}
+		};
+		document.querySelector("#deletePostCommentButton").addEventListener('click', handlePostComment);
+		
+	</script>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
+</html>

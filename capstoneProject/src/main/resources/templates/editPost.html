@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+
+<title data-th-text="|Time to Edit the Post Called ${post.name}|"></title>
+</head>
+<body>
+	<div data-th-if="${post.author.id == @sessionManager.loggedInUser.id}">
+		<h1>Go On and EDIT Your Post</h1>
+		<br />
+		<form method="POST" data-th-action="|/app/editPost/${postId}|"
+			data-th-object="${post}">
+			<label align="center" for="name of post">Name of Post</label> <input
+				type="text" size="30" class="form-control"
+				placeholder="Please give the post a decent name"
+				data-th-errorclass="is-invalid" data-th-field="*{name}" />
+			<div class="invalid-feedback" data-th-errors="*{name}"></div>
+			<label align="center" for="content of post">The Post Itself</label>
+			<textarea
+				placeholder="At least five characters and no more than one-hundred and fifty"
+				rows="6" cols="150" data-th-errorclass="is-invalid"
+				data-th-field="*{content}">
+			</textarea>
+			<div class="invalid-feedback" data-th-errors="*{content}"></div>
+			<button type="submit" class="btn btn-primary">Edit It</button>
+		</form>
+	</div>
+	<div data-th-unless="${post.author.id == @sessionManager.loggedInUser.id}">
+		<h1>This is not your post to tinker with.</h1>
+		<h2><a data-th-href="|/app/timeline|">Back to the timeline</a></h2>
+	</div>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
+</html>
