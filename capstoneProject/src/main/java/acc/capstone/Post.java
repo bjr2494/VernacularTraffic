@@ -30,22 +30,23 @@ public class Post {
 	private int id;
 	private LocalDate postDate;
 	private LocalTime postTime;
-	@JsonBackReference
+	//@JsonBackReference
 	@ManyToOne
 	private User author;
-	@JsonBackReference
+	//@JsonBackReference
 	@ManyToOne
 	private Profile profile;
-	@NotEmpty(message="we do not want any empty posts")
-	@Size(min=10, max=120, message="between 10 and 120 characters, please")
+	//@NotEmpty(message="we do not want any empty posts")
+	//@Size(min=10, max=120, message="between 10 and 120 characters, please")
 	private String content;
-	@NotEmpty(message="a post needs a name, yeah?")
-	@Size(min=4, max=25, message="between 4 and 25 characters, please")
+	//@NotEmpty(message="a post needs a name, yeah?")
+	//@Size(min=4, max=25, message="between 4 and 25 characters, please")
 	private String name;
 	@OneToOne(mappedBy="post")
 	private Transcription transcription;
 	@OneToMany(mappedBy="post")
 	private List<PostComment> postComments;
+	private int numPostComments;
 	private boolean hasTranscription;
 	private boolean hasComments;
 	private boolean hasOneComment;
@@ -184,6 +185,14 @@ public class Post {
 
 	public void setPostLanguage(Language postLanguage) {
 		this.postLanguage = postLanguage;
+	}
+
+	public int getNumPostComments() {
+		return numPostComments;
+	}
+
+	public void setNumPostComments(int numPostComments) {
+		this.numPostComments = numPostComments;
 	}
 
 	@Override

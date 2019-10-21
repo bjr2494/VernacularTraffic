@@ -2,13 +2,17 @@ package acc.capstone;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Locale;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -31,23 +37,46 @@ public class PostController {
 	@Autowired
 	ProfileRepository profileRepository;
 
-	@GetMapping("/post/{profileId}")
-	public String post(@PathVariable int profileId, Model model, RedirectAttributes redirect) {
+	@Autowired
+	UserRepository userRepository;
+
+	private static final String LOCALE_ATTR = "language";
+
+	@GetMapping("/post/{userId}")
+	public String post(@PathVariable int userId, Model model, RedirectAttributes redirect, HttpServletRequest request) {
+
+		Locale whichLocale = localeResolverforPosts().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message",
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
 			return "redirect:/app/login";
 		}
-		Optional<Profile> optionalProfile = profileRepository.findById(profileId);
-		if (optionalProfile.isPresent()) {
-			if (isPostPossible(optionalProfile)) {
-				redirect.addFlashAttribute("failure", "You cannot make a post for another user");
+		
+		Optional<User> optionalUser = userRepository.findById(userId);
+		if (optionalUser.isPresent()) {
+			if (isPostPossible(optionalUser)) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", "You cannot make a post for another user");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure", "Vous ne pouvez pas faire du post pour un autre utilisateur");
+				}
 				return "redirect:/app/timeline";
 			}
 
-			if (optionalProfile.get().getLanguages().size() > 1) {
+			if (optionalUser.get().getProfile().getLanguages().size() > 1) {
 				model.addAttribute("postLanguageChoice", "Choose your post language");
 			}
 
+			if (whichLocale.equals(Locale.FRENCH))
+				model.addAttribute("extraLetters", "");
 			// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
 			model.addAttribute("post", new Post());
 
@@ -56,95 +85,182 @@ public class PostController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
-	@PostMapping("/post/{profileId}")
-	public String post(@PathVariable int profileId, @Valid Post post, Errors errors, Model model,
-			RedirectAttributes redirect) {
-		System.out.println(errors);
-		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
+	@Transactional
+	@PostMapping("/post/{userId}")
+	public String post(@PathVariable int userId, @Valid Post post, Errors errors, Model model,
+			RedirectAttributes redirect, HttpServletRequest request) {
 
-		Optional<Profile> optionalProfile = profileRepository.findById(profileId);
-		if (optionalProfile.isPresent()) {
-			if (isPostPossible(optionalProfile)) {
-				redirect.addFlashAttribute("failure", "You cannot make a post for another user");
-				return "redirect:/app/timeline";
+		Optional<User> optionalUser = this.userRepository.findById(userId);
+		if (optionalUser.isPresent()) {
+
+			Locale whichLocale = localeResolverforPosts().resolveLocale(request);
+			if (post.getName().length() < 5) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("name", "bad value", "not decent enough");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("name", "mauvaise valeur", "pas assez décent");
+				}
+			}
+
+			if (post.getName().length() > 25) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("name", "bad value", "overly decent");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("name", "mauvaise valeur", "trop décent");
+				}
+			}
+
+			if (post.getContent().length() < 10) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("content", "bad value", "obviously too short");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("content", "mauvaise valeur", "évidemment trop court");
+				}
+			}
+
+			if (post.getContent().length() > 120) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("content", "bad value", "much too long");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("content", "mauvaise valeur", "beaucoup trop long");
+				}
 			}
 
 			if (errors.hasErrors()) {
-				// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
+				if (whichLocale.equals(Locale.FRENCH)) {
+					model.addAttribute("extraLetters", "");
+				}
+				if (optionalUser.get().getProfile().getLanguages().size() > 1) {
+					model.addAttribute("postLanguageChoice", "Choose your post language");
+				}
 				model.addAttribute("post", post);
 				return "post";
 			} else {
-				if (optionalProfile.get().getLanguages().size() == 1) {
-					post.setPostLanguage(optionalProfile.get().getLanguages().get(0));
+				if (optionalUser.get().getProfile().getLanguages().size() == 1) {
+					post.setPostLanguage(optionalUser.get().getProfile().getLanguages().get(0));
 				}
+
+				if (optionalUser.get().getProfile().getLanguages().size() == 2) {
+					if (whichLocale.equals(Locale.ENGLISH)) {
+						post.setPostLanguage(optionalUser.get().getProfile().getLanguages().get(0));
+					}
+
+					if (whichLocale.equals(Locale.FRENCH)) {
+						post.setPostLanguage(optionalUser.get().getProfile().getLanguages().get(1));
+					}
+				}
+
 				post.setAuthor(sessionManager.getLoggedInUser());
 				post.setPostDate(LocalDate.now());
 				post.setPostTime(LocalTime.now());
-				post.setProfile(optionalProfile.get());
+				post.setProfile(optionalUser.get().getProfile());
 				post.setEditableByAuthor(true);
 				post.setDeletableByAuthor(true);
 				post.setCommentableByAuthor(false);
 				post.setHasComments(false);
 				post.setHasTranscription(false);
+				post.setNumPostComments(0);
+				post.setHasOneComment(false);
 
-				Profile authorProfile = optionalProfile.get();
-				if (authorProfile.isHasMadePosts() == false) {
+				this.postRepository.save(post);
+
+				Profile authorProfile = optionalUser.get().getProfile();
+				int authorProfilePosts = authorProfile.getNumPosts();
+				authorProfilePosts++;
+				authorProfile.setNumPosts(authorProfilePosts);
+
+				if (authorProfilePosts == 1) {
 					authorProfile.setHasMadePosts(true);
 					authorProfile.setHasMadeOnePost(true);
 				}
 
-				if (authorProfile.isHasMadeOnePost() == true)
+				if (authorProfilePosts > 1) {
 					authorProfile.setHasMadeOnePost(false);
-
-				if (authorProfile.isHasMadeOnePost() == false && authorProfile.isHasMadePosts() == false) {
-					authorProfile.setHasMadeOnePost(true);
-					authorProfile.setHasMadePosts(true);
 				}
 
-				// authorProfile.getPosts().add(post);
 				this.profileRepository.save(authorProfile);
 
-				if (optionalProfile.get().getLanguages().size() == 1) {
-					// fetching the only language that there is in this case
-					post.setPostLanguage(optionalProfile.get().getLanguages().get(0));
-					this.postRepository.save(post);
-
-					redirect.addFlashAttribute("success",
-							"Here is your new post that is called " + post.getName() + ", whose language is "
-									+ post.getPostLanguage().toString() + ", "
-									+ sessionManager.getLoggedInUser().getUsername());
-					return "redirect:/app/timeline";
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("success", "Here is your new post that is called " + post.getName()
+							+ ", whose language is English, " + this.sessionManager.getLoggedInUser().getUsername());
 				}
 
-				// otherwise, if there is a second language
-				else {
-					this.postRepository.save(post);
-					return "redirect:/app/postLanguageChoice/" + post.getId();
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("success", "Voici votre nouveau post qui s'appelle " + post.getName()
+							+ ", dont la langue est français, " + this.sessionManager.getLoggedInUser().getUsername());
 				}
+
+				return "redirect:/app/timeline";
 			}
 		} else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping("/editPost/{postId}")
-	public String editPost(@PathVariable int postId, Model model, RedirectAttributes redirect) {
+	public String editPost(@PathVariable int postId, Model model, RedirectAttributes redirect,
+			HttpServletRequest request) {
+
+		Locale whichLocale = localeResolverforPosts().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message",
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
 			return "redirect:/app/login";
 		}
 		Optional<Post> optionalPost = postRepository.findById(postId);
 		if (optionalPost.isPresent()) {
 			if (whosePost(optionalPost)) {
-				redirect.addFlashAttribute("failure", "That's not yours to tinker with");
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", "That's not your post to tinker with");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure", "Vous ne pouvez pas interférer avec ce post");
+				}
 				return "redirect:/app/timeline";
 			}
 			if (isPostEditable(optionalPost)) {
-				redirect.addFlashAttribute("failure", "You can't at this time edit the post in question");
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", "You can't at this time edit the post in question");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure",
+							"Vous ne pouvez pas pour l'instant éditer le post en question");
+				}
 				return "redirect:/app/timeline";
 			}
+
+			if (whichLocale.equals(Locale.ENGLISH) && optionalPost.get().getPostLanguage().equals(Language.FRENCH)) {
+				redirect.addFlashAttribute("languageIssue",
+						"Your working language conflicts with the language of the post that you want to edit; either"
+								+ " change your mind or change your working language");
+				return "redirect:/app/timeline";
+			}
+
+			if (whichLocale.equals(Locale.FRENCH) && optionalPost.get().getPostLanguage().equals(Language.ENGLISH)) {
+				redirect.addFlashAttribute("languageIssue",
+						"Votre langue actuelle se bat contre la langue du post que vous voulez à éditer; changez"
+								+ " votre idée ou votre langue actuelle");
+				return "redirect:/app/timeline";
+			}
+
+			if (whichLocale.equals(Locale.FRENCH))
+				model.addAttribute("extraLetters", "");
+
 			model.addAttribute("post", optionalPost.get());
 			return "editPost";
 		} else
@@ -153,26 +269,59 @@ public class PostController {
 
 	@PostMapping("/editPost/{postId}")
 	public String editPost(@PathVariable int postId, @Valid Post post, Model model, Errors errors,
-			RedirectAttributes redirect) {
-		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
+			RedirectAttributes redirect, HttpServletRequest request) {
 		Optional<Post> optionalPost = postRepository.findById(postId);
 		if (optionalPost.isPresent()) {
-			if (whosePost(optionalPost)) {
-				redirect.addFlashAttribute("failure", "That's not yours to tinker with");
-				return "redirect:/app/timeline";
+
+			Locale whichLocale = localeResolverforPosts().resolveLocale(request);
+			if (post.getName().length() < 5) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("name", "bad value", "not decent enough");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("name", "mauvaise valeur", "pas assez décent");
+				}
 			}
-			if (isPostEditable(optionalPost)) {
-				redirect.addFlashAttribute("failure", "You can't at this time edit the post in question");
-				return "redirect:/app/timeline";
+
+			if (post.getName().length() > 25) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("name", "bad value", "overly decent");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("name", "mauvaise valeur", "trop décent");
+				}
 			}
+
+			if (post.getContent().length() < 10) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("content", "bad value", "obviously too short");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("content", "mauvaise valeur", "évidemment trop court");
+				}
+			}
+
+			if (post.getContent().length() > 120) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					errors.rejectValue("content", "bad value", "much too long");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					errors.rejectValue("content", "mauvaise valeur", "beaucoup trop long");
+				}
+			}
+
 			if (errors.hasErrors()) {
+				if (whichLocale.equals(Locale.FRENCH))
+					model.addAttribute("extraLetters", "");
+				model.addAttribute("post", post);
 				return "editPost";
 			} else {
 
-				if (optionalPost.get().getProfile().getLanguages().size() == 2) {
+				if (optionalPost.get().getAuthor().getProfile().getLanguages().size() == 2) {
 					// if language is English, or the first of the list
 					if (optionalPost.get().getPostLanguage()
 							.equals(optionalPost.get().getProfile().getLanguages().get(0))) {
@@ -185,12 +334,12 @@ public class PostController {
 					}
 				}
 
-				if (optionalPost.get().getProfile().getLanguages().size() == 1) {
+				if (optionalPost.get().getAuthor().getProfile().getLanguages().size() == 1) {
 					post.setPostLanguage(optionalPost.get().getProfile().getLanguages().get(0));
 				}
 
 				post.setId(optionalPost.get().getId());
-				post.setAuthor(sessionManager.getLoggedInUser());
+				post.setAuthor(this.sessionManager.getLoggedInUser());
 				post.setPostDate(LocalDate.now());
 				post.setPostTime(LocalTime.now());
 				post.setEditableByAuthor(true);
@@ -199,65 +348,120 @@ public class PostController {
 				post.setHasComments(false);
 				post.setHasOneComment(false);
 				post.setHasTranscription(false);
+				post.setNumPostComments(optionalPost.get().getNumPostComments());
 
-				Profile authorProfile = optionalPost.get().getProfile();
+				Profile authorProfile = optionalPost.get().getAuthor().getProfile();
 				post.setProfile(authorProfile);
 
 				this.postRepository.delete(optionalPost.get());
 				this.postRepository.save(post);
 
-				if (authorProfile.isHasMadePosts() == false) {
-					authorProfile.setHasMadePosts(true);
-					authorProfile.setHasMadeOnePost(true);
-				}
-
-				if (authorProfile.isHasMadeOnePost() == true)
-					authorProfile.setHasMadeOnePost(false);
-
-				if (authorProfile.isHasMadeOnePost() == false && authorProfile.isHasMadePosts() == false) {
-					authorProfile.setHasMadeOnePost(true);
-					authorProfile.setHasMadePosts(true);
-				}
-
 				// authorProfile.getPosts().add(newPost);
-				this.profileRepository.save(authorProfile);
-				redirect.addFlashAttribute("success", "Here is your freshly edited post called " + post.getName() + ", "
-						+ sessionManager.getLoggedInUser().getUsername());
+				// this.profileRepository.save(authorProfile);
+
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("success", "Here is your freshly edited post called " + post.getName()
+							+ ", " + sessionManager.getLoggedInUser().getUsername());
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("success", "Voici votre post fraîchement édité appelé" + post.getName()
+							+ ", " + sessionManager.getLoggedInUser().getUsername());
+				}
+
 				return "redirect:/app/timeline";
 			}
 		} else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
-	@PostMapping("/deletePost/{postId}")
-	public String deletePost(@PathVariable int postId, RedirectAttributes redirect) {
+	@GetMapping("/deletePost/{postId}")
+	public String deletePost(@PathVariable int postId, RedirectAttributes redirect, HttpServletRequest request) {
+		Locale whichLocale = localeResolverforPosts().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message",
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
 			return "redirect:/app/login";
 		}
+
 		Optional<Post> optionalPost = postRepository.findById(postId);
 		if (optionalPost.isPresent()) {
 			if (whosePost(optionalPost)) {
-				redirect.addFlashAttribute("failure", "That's not yours to tinker with");
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", "That's not yours to tinker with");
+				}
+				
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure", "Vous ne pouvez pas interagir avec ce post");
+				}
 				return "redirect:/app/timeline";
 			}
 			if (isPostDeletable(optionalPost)) {
-				redirect.addFlashAttribute("failure", "You can't at this time delete the post in question");
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", "You can't at this time delete the post in question");
+				}
+
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure", "Vous ne pouvez pas pour l'instant supprimer le post en question");
+				}
 				return "redirect:/app/timeline";
 			}
-			Profile authorProfile = optionalPost.get().getProfile();
-			if (authorProfile.isHasMadeOnePost() == true) {
+			
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("failure", "Please do not try to delete a post in this way");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("failure",
+						"N'essayez pas de supprimer un post de cette façon");
+			}
+			return "redirect:/app/timeline";
+		}
+		else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+	}
+
+	@Transactional
+	@PostMapping("/deletePost/{postId}")
+	public String deletePost1(@PathVariable int postId, RedirectAttributes redirect, HttpServletRequest request) {
+
+		Locale whichLocale = localeResolverforPosts().resolveLocale(request);
+		Optional<Post> optionalPost = postRepository.findById(postId);
+		if (optionalPost.isPresent()) {
+
+			this.postRepository.delete(optionalPost.get());
+
+			Profile authorProfile = optionalPost.get().getAuthor().getProfile();
+			int authorProfilePosts = authorProfile.getNumPosts();
+			authorProfilePosts--;
+			authorProfile.setNumPosts(authorProfilePosts);
+
+			if (authorProfilePosts == 1) {
+				authorProfile.setHasMadeOnePost(true);
+			}
+
+			if (authorProfilePosts == 0) {
 				authorProfile.setHasMadeOnePost(false);
 				authorProfile.setHasMadePosts(false);
 			}
-			if (authorProfile.isHasMadePosts() == true && authorProfile.getPosts().size() == 2)
-				authorProfile.setHasMadeOnePost(true);
 
-			this.profileRepository.save(authorProfile);
-			this.postRepository.delete(optionalPost.get());
-			redirect.addFlashAttribute("success",
-					"You've successfully deleted the post that was called " + optionalPost.get().getName() + ", "
-							+ sessionManager.getLoggedInUser().getUsername() + ". So don't scroll for it.");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("success",
+						"You've successfully deleted the post that was called " + optionalPost.get().getName() + ", "
+								+ this.sessionManager.getLoggedInUser().getUsername() + ". So don't scroll for it.");
+			}
+			
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("success", "Vous avez supprimé avec succès votre post qui s'appelait " 
+						+ optionalPost.get().getName() + ", " + this.sessionManager.getLoggedInUser().getUsername() 
+						+ ". Alors ne faites pas défiler pour cela.");
+			}
+
 			return "redirect:/app/timeline";
 		} else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -267,8 +471,8 @@ public class PostController {
 		return !sessionManager.isLoggedIn();
 	}
 
-	private boolean isPostPossible(Optional<Profile> optionalProfile) {
-		return optionalProfile.get().getId() != sessionManager.getLoggedInUser().getId();
+	private boolean isPostPossible(Optional<User> optionalUser) {
+		return optionalUser.get().getId() != this.sessionManager.getLoggedInUser().getId();
 	}
 
 	private boolean whosePost(Optional<Post> optionalPost) {
@@ -283,5 +487,12 @@ public class PostController {
 	private boolean isPostDeletable(Optional<Post> optionalPost) {
 		return optionalPost.get().isDeletableByAuthor() == false
 				&& optionalPost.get().getAuthor().getId() == sessionManager.getLoggedInUser().getId();
+	}
+
+	@Bean
+	public LocaleResolver localeResolverforPosts() {
+		SessionLocaleResolver r = new SessionLocaleResolver();
+		r.setLocaleAttributeName(LOCALE_ATTR);
+		return r;
 	}
 }

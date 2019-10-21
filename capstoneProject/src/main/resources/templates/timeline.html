@@ -15,8 +15,8 @@
 <title data-th-text="#{timelineTitle}">Timeline</title>
 </head>
 <body>
-	<h1 align="center" class="alert alert-danger" data-th-if="${failure}"
-		data-th-text="#{alreadyLoggedIn}">
+	<h1 align="center" class="alert alert-danger" data-th-if="${failure}">
+		<span data-th-text="${failure}"></span>
 		<br />
 	</h1>
 	<h1 align="center">
@@ -83,12 +83,18 @@
 	<br />
 	<br />
 	<h2 align="center">
-		<span class="alert alert-success"
-			data-th-text="|Here ${@applicationManager.verb} The ${@applicationManager.numPosts} 
-				${@applicationManager.plural}|">Here
-			Are The Posts:</span>
+		<span class="alert alert-success" data-th-if="${languageMessage}"
+			data-th-text="${languageMessage}"></span>
 	</h2>
+	<h3 align="center" data-th-if="${languageChange}">
+		<a data-th-href="|/app/timelineLanguagePreference/#{language}|">
+		<br />
+		<span class="alert alert-secondary" data-th-text="#{languagePreference}"></span></a>
+	</h3>
 	<hr />
+	
+	<h5 data-th-if="${languageIssue}">
+		<span class="alert alert-danger" data-th-text="${languageIssue}"></span></h5>
 	<div data-th-if="${success}">
 		<div align="center">
 			<span class="alert alert-primary" data-th-text="${success}"></span>
@@ -130,9 +136,10 @@
 			</div>
 			<div data-th-if="${post.deletableByAuthor}">
 				<br />
-				<form id="deletePost" data-th-action="|/app/deletePost/${post.id}|"
-					method="POST">
-					<button class="btn btn-warning" id="deletePostButton"
+				<form data-th-id="|deletePost${post.id}|"
+					data-th-action="|/app/deletePost/${post.id}|" method="POST">
+					<button class="btn btn-warning deletePostButton"
+						data-th-data-form="|deletePost${post.id}|"
 						data-th-text="|#{deletePostOfferTimeline} ${@sessionManager.loggedInUser.username}|"></button>
 				</form>
 			</div>
@@ -142,30 +149,32 @@
 			<section data-th-each="postComment : ${post.postComments}">
 				<br /> <br /> <span class="alert alert-secondary"
 					data-th-text="${postComment.content}"></span> <br /> <br /> <span
-					class="alert alert-secondary">post comment made by</span>
+					class="alert alert-secondary" data-th-text="#{postCommentAuthor}">post comment made by</span>
 				<div
 					data-th-if="${postComment.author.id == @sessionManager.loggedInUser.id}">
 					<br /> <span class="alert alert-secondary"
-						data-th-text="|you, on ${postComment.commentDate},
-								at ${postComment.commentTime}|"></span>
+						data-th-text="|#{postCommentAuthorLoggedInUser}, #{postCommentDate} ${postComment.commentDate},
+								#{postCommentTime} ${postComment.commentTime}|"></span>
 				</div>
 				<br /> <br />
 				<div
 					data-th-unless="${postComment.author.id == @sessionManager.loggedInUser.id}">
 					<span class="alert alert-secondary"> <a
-						data-th-href="|/app/${postComment.author.username}|"
-						data-th-text="${postComment.author}"></a> <span
-						data-th-text="|, on ${postComment.commentDate}, at ${postComment.commentTime}|"></span>
+						data-th-href="|/app/${postComment.author.id}|"
+						data-th-text="${postComment.author.username}"></a> <span
+						data-th-text="|, #{postCommentDate} ${postComment.commentDate}, #{postCommentTime} ${postComment.commentTime}|"></span>
 					</span> <br />
 				</div>
 				<div
 					data-th-if="${postComment.author.id == @sessionManager.loggedInUser.id}">
+					<span data-th-text="${postComment.post}"></span>
 					<div data-th-if="${postComment.deletableByAuthor}">
-						<form id="deletePostComment"
+						<form data-th-id="|deletePostComment${postComment.id}|"
 							data-th-action="|/app/deletePostComment/${postComment.id}|"
 							method="POST">
-							<button id="deletePostCommentButton" class="btn btn-light"
-								data-th-text="|DELETE this post comment, ${@sessionManager.loggedInUser.username}|"></button>
+							<button class="btn btn-light deletePostCommentButton"
+								data-th-data-form="|deletePostComment${postComment.id}|"
+								data-th-text="|#{deletePostComment}, ${@sessionManager.loggedInUser.username}|"></button>
 						</form>
 					</div>
 				</div>
@@ -174,17 +183,16 @@
 					<div data-th-if="${post.commentableByAuthor}">
 						<br />
 						<form method="GET" data-th-action="|/app/postComment/${post.id}|">
-							<button class="btn btn-outline-warning" type="submit">Comment
-								on this post</button>
+							<button class="btn btn-outline-warning" type="submit">Comment on your own post</button>
 						</form>
 					</div>
 				</div>
 			</section>
 			<div
-				data-th-if="${post.author.id ne @sessionManager.loggedInUser.id}">
+				data-th-if="${@sessionManager.loggedInUser.id != post.author.id}">
 				<br />
 				<form method="GET" data-th-action="|/app/postComment/${post.id}|">
-					<button class="btn btn-outline-warning" type="submit">Comment
+					<button class="btn btn-outline-warning" type="submit" data-th-text="#{commentPostOfferTimeline}">Comment
 						on this post</button>
 				</form>
 			</div>
@@ -206,23 +214,23 @@
 				data-th-text="${post.transcription.name}"></span> <br /> <br /> <span
 				class="alert alert-info"
 				data-th-text="${post.transcription.content}">comment</span> <br />
-			<br /> <span class="alert alert-info"> transcription made by
+			<br /> <span class="alert alert-info" data-th-text="#{transcriptionAuthorTimeline}"> transcription made by
 			</span>
 			<div
 				data-th-if="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
 				<br /> <span class="alert alert-info"
-					data-th-text="|you, on ${post.transcription.transcriptionDate},
-								at ${post.transcription.transcriptionTime}|"></span>
+					data-th-text="|#{transcriptionAuthor}, #{transcriptionDateTimeline} ${post.transcription.transcriptionDate},
+								#{transcriptionTimeTimeline} ${post.transcription.transcriptionTime}|"></span>
 				<br /> <br />
 			</div>
 			<div
 				data-th-unless="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
 				<br /> <span class="alert alert-info"><a
 					data-th-href="|/app/profile/${post.transcription.author.id}|"
-					data-th-text="${post.transcription.author}"></a> <span
+					data-th-text="${post.transcription.author.username}"></a> <span
 					class="alert alert-info"
-					data-th-text="|, on ${post.transcription.transcriptionDate}, 
-									 	at ${post.transcription.transcriptionTime}|">
+					data-th-text="|, #{transcriptionDateTimeline} ${post.transcription.transcriptionDate}, 
+									 	#{transcriptionTimeTimeline} ${post.transcription.transcriptionTime}|">
 				</span> </span> <br /> <br />
 			</div>
 			<div
@@ -230,53 +238,60 @@
 				<div data-th-if="${post.transcription.editableByAuthor}">
 					<a data-th-href="|/app/editTranscription/${post.transcription.id}|">
 						<span
-						data-th-text="|Click here to edit your transcription, ${@sessionManager.loggedInUser.username}|"></span>
+						data-th-text="|#{editTranscription}, ${@sessionManager.loggedInUser.username}|"></span>
 					</a>
 				</div>
+
 				<div data-th-if="${post.transcription.deletableByAuthor}">
 					<br />
-					<form id="deleteTranscription"
+					<form data-th-id="|deleteTranscription${post.transcription.id}|"
 						data-th-action="|/app/deleteTranscription/${post.transcription.id}|"
 						method="POST">
-						<button id="deleteTranscriptionButton" class="btn btn-info"
-							data-th-text="|DELETE this transcription, ${@sessionManager.loggedInUser.username}|"></button>
+						<button class="btn btn-info deleteTranscriptionButton"
+							data-th-data-form="|deleteTranscription${post.transcription.id}|"
+							data-th-text="|#{deleteTranscription}, ${@sessionManager.loggedInUser.username}|"></button>
 					</form>
 				</div>
 			</div>
+
 
 			<div data-th-if="${post.transcription.transcriptionComments}">
 				<div
 					data-th-each="transcriptionComment : ${post.transcription.transcriptionComments}">
 					<br /> <span class="alert alert-danger"
 						data-th-text="${transcriptionComment.content}">comment</span> <br />
-					<br /> <span class="alert alert-danger">transcription
+					<br /> <span class="alert alert-danger" data-th-text="#{transcriptionCommentMadeBy}">transcription
 						comment made by</span>
 					<div
 						data-th-if="${@sessionManager.loggedInUser.id == transcriptionComment.author.id}">
 						<br /> <span class="alert alert-danger"
-							data-th-text="|you, on ${transcriptionComment.commentDate},
-						 	at ${transcriptionComment.commentTime}|">
+							data-th-text="|#{transcriptionCommentAuthor}, 
+								#{transcriptionCommentDate} ${transcriptionComment.commentDate},
+						 	#{transcriptionCommentTime} ${transcriptionComment.commentTime}|">
 						</span> <br /> <br />
 					</div>
 					<div
 						data-th-unless="${@sessionManager.loggedInUser.id == transcriptionComment.author.id}">
 						<br /> <span class="alert alert-danger"> <a
 							data-th-href="|/app/profile/${transcriptionComment.author.id}|"
-							data-th-text="${transcriptionComment.author}"></a> <span
+							data-th-text="${transcriptionComment.author.username}"></a> <span
 							class="alert alert-danger"
-							data-th-text="|, on ${transcriptionComment.commentDate},
-									at ${transcriptionComment.commentTime}|"></span>
+							data-th-text="|, #{transcriptionCommentDate} ${transcriptionComment.commentDate},
+									#{transcriptionCommentTime} ${transcriptionComment.commentTime}|"></span>
 						</span> <br /> <br />
 					</div>
+					<span data-th-text="${transcriptionComment.deletableByAuthor}"></span>
 					<div
 						data-th-if="${transcriptionComment.author.id == @sessionManager.loggedInUser.id}">
 						<div data-th-if="${transcriptionComment.deletableByAuthor}">
-							<form id="deleteTranscriptionComment"
+							<form
+								data-th-id="|deleteTranscriptionComment${transcriptionComment.id}|"
 								data-th-action="|/app/deleteTranscriptionComment/${transcriptionComment.id}|"
 								method="POST">
-								<button id="deleteTranscriptionCommentButton"
-									class="btn btn-danger"
-									data-th-text="|DELETE this transcription comment, ${@sessionManager.loggedInUser.username}|"></button>
+								<button class="btn btn-danger deleteTranscriptionCommentButton"
+									data-th-data-form="|deleteTranscriptionComment${transcriptionComment.id}|"
+									data-th-text="|#{deleteTranscriptionComment}, ${@sessionManager.loggedInUser.username}|"></button>
+									<br /><br />
 							</form>
 						</div>
 					</div>
@@ -288,7 +303,7 @@
 					<br />
 					<form method="GET"
 						data-th-action="|/app/transcriptionComment/${post.transcription.id}|">
-						<button class="btn btn-outline-danger" type="submit">Comment
+						<button class="btn btn-outline-danger" type="submit" data-th-text="#{transcriptionCommentOffer}">Comment
 							on this transcription</button>
 					</form>
 				</div>
@@ -298,7 +313,7 @@
 				data-th-unless="${@sessionManager.loggedInUser.id == post.transcription.author.id}">
 				<form method="GET"
 					data-th-action="|/app/transcriptionComment/${post.transcription.id}|">
-					<button class="btn btn-outline-danger" type="submit">Comment
+					<button class="btn btn-outline-danger" type="submit" data-th-text="#{transcriptionCommentOffer}">Comment
 						on this transcription</button>
 				</form>
 			</div>
@@ -328,37 +343,47 @@
 	</nav>
 
 	<script>
-		const handlePost = e => {
-			e.preventDefault();
-			if (confirm("Do you really want to delete this post?")) {
-				document.querySelector("#deletePost").submit();
-			}
-		};
-		document.querySelector("#deletePostButton").addEventListener('click', handlePost);
+		
 		
 		const handleTranscription = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this transcription?")) {
-				document.querySelector("#deleteTranscription").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deleteTranscriptionButton").addEventListener('click', handleTranscription);
+		document.querySelectorAll(".deleteTranscriptionButton").
+			forEach(b=>b.addEventListener('click', handleTranscription));
 		
 		const handleTranscriptionComment = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this transcription comment?")) {
-				document.querySelector("#deleteTranscriptionComment").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deleteTranscriptionCommentButton").addEventListener('click', handleTranscriptionComment);
+		document.querySelectorAll(".deleteTranscriptionCommentButton").
+			forEach(b=>b.addEventListener('click', handleTranscriptionComment));
 		
 		const handlePostComment = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this post comment?")) {
-				document.querySelector("#deletePostComment").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deletePostCommentButton").addEventListener('click', handlePostComment);
+		document.querySelectorAll(".deletePostCommentButton").
+			forEach(b=>b.addEventListener('click', handlePostComment));
+			
+		const handlePost = e => {
+			e.preventDefault();
+			console.log(e.target);
+			if (confirm("Do you really want to delete this post?")) {
+				document.querySelector("#" + e.target.dataset.form).submit();
+			}
+		};
+		document.querySelectorAll(".deletePostButton").
+			forEach(b=>b.addEventListener('click', handlePost));
 		
 	</script>
 

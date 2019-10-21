@@ -1,73 +1,107 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title data-th-text="#{loginTitle}">Login</title>
-    <!-- data-th-text="${param.x}" -->
-    <style>
-    	input[type="text"]::placeholder
-    		text-align: center;
-    </style>
-  </head>
-  <body>
-  	  
-    <h1 align="center" data-th-text="#{topLineLogin}">Login for ChirGloss</h1>
-    <div align="center"><a data-th-href="|/app/register|" 
-    	data-th-text="#{loginLinkToRegister}">But Have You Registered?</a></div>
-    <br />
-    <h4 align="center">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<title data-th-text="#{loginTitle}">Login</title>
+<!-- data-th-text="${param.x}" -->
+<style>
+input
+[
+type
+=
+"text"
+]
+:
+:placeholder
+
+    		
+text-align
+:
+ 
+center
+;
+</style>
+</head>
+<body>
+	
+		
+		<div data-th-each="language : ${T(acc.capstone.Language).values()}"
+		data-th-text="${#messages.msg('x' + language)}"></div>
+		
+	<h1 align="center" data-th-text="#{topLineLogin}">Login for
+		ChirGloss</h1>
+	<div align="center">
+		<a data-th-href="|/app/register|"
+			data-th-text="#{loginLinkToRegister}">But Have You Registered?</a>
+	</div>
+	<br />
+	<h4 align="center">
 		<a data-th-href="|/app/loginLanguagePreference/#{language}|"> <span
 			data-th-text="#{languagePreference}"></span></a>
 	</h4>
-    <div data-th-if="${message}">
-    	<div align="center">
-    	<br />
-    	<span class="alert alert-danger" data-th-text="${message}"></span>
-    	</div>
-    </div>
-    <div data-th-if="${wrongUsername}">
-    	<div align="center">
-  			<span class="alert alert-danger" data-th-text="${wrongUsername}"></span>
+	<div data-th-if="${message}">
+		<div align="center">
+			<br /> <span class="alert alert-danger" data-th-text="${message}"></span>
+		</div>
+	</div>
+	<div data-th-if="${wrongUsername}">
+		<div align="center">
+			<span class="alert alert-danger" data-th-text="${wrongUsername}"></span>
 		</div>
 	</div>
 	<div data-th-if="${wrongPassword}">
 		<div align="center">
-  			<span class="alert alert-danger" data-th-text="${wrongPassword}"></span>
+			<span class="alert alert-danger" data-th-text="${wrongPassword}"></span>
 		</div>
 	</div>
-    <form method="POST" data-th-action="|/app/login|" data-th-object="${loginAttempt}">
-  		<div align="center" class="form-group">
- 	 	<label for="username"></label>
-   		<input size="50" class="form-control" type="text" 
-   				data-th-placeholder="#{placeholderUsernameLogin}" data-th-field="*{username}"
-					       data-th-errorclass="is-invalid"  />
-					<div class="invalid-feedback" data-th-errors="*{username}">err</div>
+	<form method="POST" data-th-action="|/app/login|"
+		data-th-object="${loginAttempt}">
+		<div align="center" class="form-group">
+			<label for="username"></label> <input size="50" class="form-control"
+				type="text" data-th-placeholder="#{placeholderUsernameLogin}"
+				data-th-field="*{username}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{username}">err</div>
 		</div>
-	<div align="center">
-    	<small id="emailHelp" class="form-text text-muted" data-th-text="#{loginEmailJoke}">We'll never share your email with 
-    		anyone else <strong>but we may share the phonetically transcribed version thereof</strong></small>
-   	</div>
-   	<br />
-  <div align="center" class="form-group">
-    <label for="password"></label>
-    <input class="form-control" size="50" type="password" 
-    		data-th-placeholder="#{placeholderUsernamePassword}"
-    	data-th-field="*{password}" data-th-errorclass="is-invalid" />
-    	<div class="invalid-feedback" data-th-errors="*{password}">err</div>
-  </div>
-  <div align="center">
-  	<button type="submit" class="btn btn-primary" data-th-text="#{loginButton}">Log in</button>
-  </div>
-</form>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+		<div align="center">
+			<small id="emailHelp" class="form-text text-muted"
+				data-th-text="#{loginEmailJoke}">We'll never share your
+				email with anyone else <strong>but we may share the
+					phonetically transcribed version thereof</strong>
+			</small>
+		</div>
+		<br />
+		<div align="center" class="form-group">
+			<label for="password"></label> <input class="form-control" size="50"
+				type="password" data-th-placeholder="#{placeholderUsernamePassword}"
+				data-th-field="*{password}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{password}">err</div>
+		</div>
+		<div align="center">
+			<button type="submit" class="btn btn-primary"
+				data-th-text="#{loginButton}">Log in</button>
+		</div>
+	</form>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
 </html>

@@ -62,6 +62,7 @@ public class LanguageController {
 	@GetMapping("/loginLanguagePreference/{language}")
 	public String loginLanguagePreference(@PathVariable String language, HttpServletRequest request,
 			RedirectAttributes redirect) {
+
 		if (language.equals("en")) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			return "redirect:/app/login";
@@ -72,42 +73,142 @@ public class LanguageController {
 		} else
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 	}
-	
-	/*
-	 * @GetMapping("/postLanguagePreference/{language}") public String
-	 * postLanguagePreference(@PathVariable String language, HttpServletRequest
-	 * request, RedirectAttributes redirect) { if (isLoggedIn()) {
-	 * redirect.addFlashAttribute("message",
-	 * "Why should you be allowed to do such as a non-logged-in user?"); return
-	 * "redirect:/app/login"; }
-	 * 
-	 * if (language.equals("en")) { WebUtils.setSessionAttribute(request,
-	 * LOCALE_ATTR, Locale.ENGLISH); return "redirect:/app/post/" +
-	 * this.sessionManager.getLoggedInUser().getProfile().getId(); }
-	 * 
-	 * if (language.equals("fr")) { WebUtils.setSessionAttribute(request,
-	 * LOCALE_ATTR, Locale.FRENCH); return "redirect:/app/post/" +
-	 * this.sessionManager.getLoggedInUser().getProfile().getId(); } else throw new
-	 * ResponseStatusException(HttpStatus.UNAUTHORIZED); }
-	 */
 
+	@GetMapping("/timelineLanguagePreference/{language}")
+	public String timelineLanguagePreference(@PathVariable String language, HttpServletRequest request,
+			RedirectAttributes redirect) {
+		
+		this.isLoggedIn();
+		
+		if (language.equals("en")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
+			return "redirect:/app/timeline";
+		}
+		if (language.equals("fr")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
+			return "redirect:/app/timeline";
+		} else
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+	}
+	
+	@GetMapping("/profileLanguagePreference/{language}")
+	public String profileLanguagePreference(@PathVariable String language, HttpServletRequest request,
+			RedirectAttributes redirect) {
+
+		Locale whichLocale = localeResolver().resolveLocale(request);
+		
+		if (isLoggedIn()) {
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+			
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message", 
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
+		}
+		
+		Profile profile = this.profileRepository.findByUser(this.sessionManager.getLoggedInUser());
+		if (profile.getLanguages().size() == 1) {
+			if (profile.getPreferredLanguage().equals(Language.ENGLISH)) {
+				redirect.addFlashAttribute("failure", "Your profile has only one language");
+			}
+			if (profile.getPreferredLanguage().equals(Language.FRENCH)) {
+				redirect.addFlashAttribute("failure", "Votre profil n'a qu'une langue");
+			}
+			return "redirect:/app/timeline";
+		}
+		
+		if (language.equals("en")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
+			if (profile.getLanguages().size() == 1)
+				redirect.addFlashAttribute("message", "You've changed your language to English, which is your only language");
+			if (profile.getLanguages().size() > 1)
+				redirect.addFlashAttribute("message", "You've changed your language to English");
+			return "redirect:/app/profile/" + profile.getId();
+		}
+		if (language.equals("fr")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
+			if (profile.getLanguages().size() == 1)
+				redirect.addFlashAttribute("message", "Vous avez changé votre langue à français, lequel est votre seule langue");
+			if (profile.getLanguages().size() > 1)
+				redirect.addFlashAttribute("message", "Vous avez changé votre langue à français");
+			return "redirect:/app/profile/" + profile.getId();
+		} else
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+	}
+
+	@GetMapping("/postLanguagePreference/{language}")
+	public String postLanguagePreference(@PathVariable String language, HttpServletRequest request, 
+				RedirectAttributes redirect) {
+
+		Locale whichLocale = localeResolver().resolveLocale(request);
+		
+		if (isLoggedIn()) {
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+			
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message", 
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
+		}
+		
+		Profile profile = this.profileRepository.findByUser(this.sessionManager.getLoggedInUser());
+		if (profile.getLanguages().size() == 1) {
+			if (profile.getPreferredLanguage().equals(Language.ENGLISH)) {
+				redirect.addFlashAttribute("failure", "Your profile has only one language");
+			}
+			if (profile.getPreferredLanguage().equals(Language.FRENCH)) {
+				redirect.addFlashAttribute("failure", "Votre profil n'a qu'une langue");
+			}
+			return "redirect:/app/timeline";
+		}
+		
+		if (language.equals("en")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
+			redirect.addFlashAttribute("message",
+					"Your working language (and soon-to-be post language, unless you change it again, is English");
+			return "redirect:/app/post/" + profile.getId();
+		}
+		
+		if (language.equals("fr")) {
+			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
+			redirect.addFlashAttribute("message", "Le français est votre langue actuelle"
+					+ " (et votre prochaine langue de publication, à moins que vous ne la changiez à nouveau)");
+			return "redirect:/app/post/" + profile.getId();
+		}
+		else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+	}
+	
 	@GetMapping("/preferredLanguageProfileCreation/{profileId}")
 	public String preferredLanguageProfileCreation(@PathVariable int profileId, RedirectAttributes redirect,
-			Model model) {
-		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
+			Model model, HttpServletRequest request) {
+		
+		Locale whichLocale = makeLocaleAndIsLoggedIn(redirect, request);
 
 		Optional<Profile> optionalProfile = profileRepository.findById(profileId);
 		if (optionalProfile.isPresent()) {
 			if (whoseProfile(optionalProfile)) {
-				redirect.addFlashAttribute("failure", "You cannot make profile changes for another user");
+				if (localeIsEnglish(whichLocale)) {
+					redirect.addFlashAttribute("failure", "You cannot make profile changes for another user");
+				}
+				
+				if (localeIsFrench(whichLocale)) {
+					redirect.addFlashAttribute("failure", "Vous ne pouvez pas modifier le profil d'un autre utilisateur");
+				}
 				return "redirect:/app/timeline";
 			}
 
 			if (this.sessionManager.getLoggedInUser().getProfile().getLanguages().size() == 1) {
-				redirect.addFlashAttribute("failure", "Your profile has only one language");
+				if (localeIsEnglish(whichLocale)) {
+					redirect.addFlashAttribute("failure", "Your profile has only one language");
+				}
+				
+				if (localeIsFrench(whichLocale)) {
+					redirect.addFlashAttribute("failure", "Votre profil n'a qu'une langue");
+				}
 				return "redirect:/app/timeline";
 			}
 
@@ -121,26 +222,19 @@ public class LanguageController {
 	@PostMapping("/preferredLanguageProfileCreation/{profileId}")
 	public String preferredLanguageProfileCreation1(@PathVariable int profileId, RedirectAttributes redirect,
 			Model model, HttpServletRequest request, @Valid PreferredLanguage preferredLanguage, Errors errors) {
-		System.out.println(errors);
-		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
+		
+		Locale whichLocale = makeLocaleAndIsLoggedIn(redirect, request);
 
 		Optional<Profile> optionalProfile = profileRepository.findById(profileId);
 		if (optionalProfile.isPresent()) {
-			if (whoseProfile(optionalProfile)) {
-				redirect.addFlashAttribute("failure", "You cannot make profile changes for another user");
-				return "redirect:/app/timeline";
-			}
-
-			if (this.sessionManager.getLoggedInUser().getProfile().getLanguages().size() == 1) {
-				redirect.addFlashAttribute("failure", "Your profile has only one language");
-				return "redirect:/app/timeline";
-			}
-
 			if (!optionalProfile.get().getLanguages().contains(preferredLanguage.getName())) {
-				errors.rejectValue("name", "bad value", "the chosen value is unsupported");
+				if (localeIsEnglish(whichLocale)) {
+					errors.rejectValue("name", "bad value", "You must make a choice");
+				}
+				
+				if (localeIsFrench(whichLocale)) {
+					errors.rejectValue("name", "mauvaise valeur", "Vous devez choisir une option");
+				}
 			}
 
 			if (errors.hasErrors()) {
@@ -151,96 +245,50 @@ public class LanguageController {
 
 			optionalProfile.get().setPreferredLanguage(preferredLanguage.getName());
 			this.profileRepository.save(optionalProfile.get());
+			
+			if (preferredLanguage.getName().equals(Language.ENGLISH)) {
+				WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
+			}
+			
+			if (preferredLanguage.getName().equals(Language.FRENCH)) {
+				WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
+			}
 
-			redirect.addFlashAttribute("success",
-					"Hooray, " + sessionManager.getLoggedInUser().getUsername() + "! Your preferred language is "
-							+ preferredLanguage.getName().toString() + ", or the one that you're reading now!");
+			if (localeIsEnglish(whichLocale)) {
+				redirect.addFlashAttribute("success",
+						"Hooray, " + sessionManager.getLoggedInUser().getUsername() + "! Your preferred language is English");
+			}
+
+			if (localeIsFrench(whichLocale)) {
+				redirect.addFlashAttribute("success",
+						"Bravo, " + sessionManager.getLoggedInUser().getUsername() + "! Votre langue préférée est le français");
+			}
 			return "redirect:/app/timeline";
 		} else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
-	/*
-	 * @GetMapping("/postLanguageChoice/{profileId}") public String
-	 * postLanguageChoice(@PathVariable int profileId, RedirectAttributes redirect,
-	 * Model model) { if (isLoggedIn()) { redirect.addFlashAttribute("message",
-	 * "Why should you be allowed to do such as a non-logged-in user?"); return
-	 * "redirect:/app/login"; }
-	 * 
-	 * Optional<Profile> optionalProfile = profileRepository.findById(profileId); if
-	 * (optionalProfile.isPresent()) { if (whoseProfile(optionalProfile)) {
-	 * redirect.addFlashAttribute("failure",
-	 * "You cannot make profile changes for another user"); return
-	 * "redirect:/app/timeline"; }
-	 * 
-	 * if (this.sessionManager.getLoggedInUser().getProfile().getLanguages().size()
-	 * == 1) { redirect.addFlashAttribute("failure",
-	 * "Your profile has only one language"); return "redirect:/app/timeline"; }
-	 * 
-	 * model.addAttribute("postLanguageChoice", new PostLanguage());
-	 * model.addAttribute("profile", optionalProfile.get()); return "postLanguage";
-	 * } else throw new ResponseStatusException(HttpStatus.NOT_FOUND); }
-	 */
-
-	@GetMapping("/postLanguageChoice/{postId}")
-	public String postLanguageChoice(@PathVariable int postId, RedirectAttributes redirect, Model model, 
-			HttpServletRequest request) {
+	private Locale makeLocaleAndIsLoggedIn(RedirectAttributes redirect, HttpServletRequest request) {
+		Locale whichLocale = localeResolver().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
-		Optional<Post> optionalPost = this.postRepository.findById(postId);
-		if (optionalPost.isPresent()) {
-			if (isLanguageEnglish(request)) {
-				model.addAttribute("currentLanguageAlmostPost", "English");
-			}
-
-			if (isLanguageFrench(request)) {
-				model.addAttribute("currentLanguageAlmostPost", "French");
+			if (localeIsEnglish(whichLocale)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
 			}
 			
-			model.addAttribute("post", optionalPost.get());
-			return "postLanguage";
-		}
-		else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	}
-	
-	@PostMapping("/postLanguageChoice/{postId}")
-	public String postLanguageChoice1(@PathVariable int postId,
-			RedirectAttributes redirect, Model model, HttpServletRequest request) {
-		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
-			return "redirect:/app/login";
-		}
-		Optional<Post> optionalPost = this.postRepository.findById(postId);
-		if (optionalPost.isPresent()) {
-			PostLanguage postLanguage = new PostLanguage();
-			if (isLanguageEnglish(request)) {
-				postLanguage.setName(optionalPost.get().getProfile().getLanguages().get(0));
+			if (localeIsFrench(whichLocale)) {
+				redirect.addFlashAttribute("message", 
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
 			}
-
-			if (isLanguageFrench(request)) {
-				postLanguage.setName(optionalPost.get().getProfile().getLanguages().get(1));
-			}
-			
-			optionalPost.get().setPostLanguage(postLanguage.getName());
-			this.postRepository.save(optionalPost.get());
-			
-			redirect.addFlashAttribute("success",
-					"You've successfully made a post called " + optionalPost.get().getName() + ", whose language is "
-							+ optionalPost.get().getPostLanguage() + ", "
-							+ this.sessionManager.getLoggedInUser().getUsername());
-			return "redirect:/app/timeline";
-		} else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		return whichLocale;
 	}
 
-	private boolean isLanguageFrench(HttpServletRequest request) {
-		return WebUtils.getSessionAttribute(request, LOCALE_ATTR) == Locale.FRENCH;
+	private boolean localeIsFrench(Locale whichLocale) {
+		return whichLocale.equals(Locale.FRENCH);
 	}
 
-	private boolean isLanguageEnglish(HttpServletRequest request) {
-		return WebUtils.getSessionAttribute(request, LOCALE_ATTR) == Locale.ENGLISH;
+	private boolean localeIsEnglish(Locale whichLocale) {
+		return whichLocale.equals(Locale.ENGLISH);
 	}
 
 	private boolean whoseProfile(Optional<Profile> optionalProfile) {

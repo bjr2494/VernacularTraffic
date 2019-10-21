@@ -1,326 +1,373 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-    	Your Profile
-    </title>
-    <title data-th-unless="${profile.id == @sessionManager.loggedInUser.id}"
-    	data-th-text="|${profile.user.username}'s Profile|">
-    </title>
-  </head>
-  <body>
-    <h1 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-    	<span data-th-text="|This is your profile, ${@sessionManager.loggedInUser.username}|"></span>
-    </h1>
-    <h1 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-    	<span data-th-text="|This is ${profile.user.username}'s profile|"></span>
-    </h1>
-    <div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-    	<h2 data-th-text="|Registered User since ${@sessionManager.loggedInUser.joinDate}|"></h2>
-    </div>
-    <div data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-    	<h2 data-th-text="|Registered User since ${profile.user.joinDate}|"></h2>
-    </div>
-    <h3><a data-th-href="|/app/timeline|">Back to the Timeline</a></h3>
-    <br />
-    <div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-    <form data-th-action="|/app/logout|" method="POST">
-    	<h3>
-    		<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">
-				Or Log Out
-			</button>
-		</h3>
-			<!-- Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
-				aria-hidden="true">
-  			<div class="modal-dialog" role="document">
-    			<div class="modal-content">
-      				<div class="modal-header">
-        		<h5 class="modal-title" id="exampleModalLabel">Log Out</h5>
-       				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          				<span aria-hidden="true">&times;</span>
-   		 			</button>
-      				</div>
-     	 		<div class="modal-body">
-       				Are you sure that you want this option and no other?
-     	 		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        		<button type="submit" class="btn btn-primary">Yes</button>
-      		</div>
-    			</div>
-  			</div>
-		</div>		
-    </form>
-    </div>
-    <br />
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
-      <th scope="col">Age</th>
-      <span data-th-if="${profile.oneLanguage == true}">
-      	<th scope="col">Language</th>
-      </span>
-      <span data-th-unless="${profile.oneLanguage == true}">
-      	<th scope="col">Languages</th>
-      </span>
-      <th scope="col">Email Address</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      	<td data-th-text="${profile.firstName}"></td>
- 	  	<td data-th-text="${profile.lastName}"></td>
- 	  	<td data-th-text="${profile.age}"></td>
- 	  	<td>
- 	  	<span data-th-each="language, iterStat : ${profile.languages}" 
- 	  		data-th-text="!${iterStat.last} ? ${language} + ', ' : ${language}"></span>
-  		</td>
-      <td data-th-text="${profile.emailAddress}"></td>
-    </tr>
-  	</tbody>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<title data-th-if="${profile.id == @sessionManager.loggedInUser.id}"
+	data-th-text="#{yourProfile}"></title>
+<title data-th-unless="${profile.id == @sessionManager.loggedInUser.id}"
+	data-th-text="|${profile.user.username}'s Profile|"></title>
+</head>
+<body>
+	<h4 data-th-if="${message}">
+		<span class="alert alert-danger" data-th-text="${message}"></span>
+	</h4>
+	<h4 data-th-if="${warning}">
+		<span class="alert alert-danger" data-th-text="${warning}"></span>
+	</h4>
+	
+	<h1 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+		<span
+			data-th-text="|#{yourProfile2}, ${@sessionManager.loggedInUser.username}|"></span>
+	</h1>
+	<h1 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+		<span data-th-text="|#{whoseProfile} ${profile.user.username}|"></span>
+	</h1>
+	<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+		<h2
+			data-th-text="|#{userHowLong} ${@sessionManager.loggedInUser.joinDate}|"></h2>
+	</div>
+	<div data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+		<h2 data-th-text="|#{userHowLong} ${profile.user.joinDate}|"></h2>
+	</div>
+	<br />
+	<h3>
+		<span class="alert alert-success"> <a data-th-href="|/app/timeline|" 
+			data-th-text="#{toTimelineFromProfile}">Back to the Timeline</a></span>
+	</h3>
+	<br />
+	<h4 data-th-if="${changeLanguage}">
+		<span class="alert alert-info"><a data-th-href="|/app/profileLanguagePreference/#{language}|"
+			 data-th-text="#{languageChangeProfile}">
+		</a></span>
+		<br />
+	</h4>
+	<br />
+	<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+		<div data-th-if="${logOut}">
+			<form data-th-action="|/app/logout|" method="POST">
+				<h3>
+					<button type="button" class="btn btn-dark" data-toggle="modal"
+						data-target="#exampleModal" data-th-text="#{logOutOption}">Or Log Out</button>
+				</h3>
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModal" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Log Out</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" data-th-text="#{logOutSure}">Are you sure that you want this
+								option and no other?</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal" data-th-text="#{profileLogoutNo}">No</button>
+								<button type="submit" class="btn btn-primary" data-th-text="#{profileLogoutYes}">Yes</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<br />
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col" data-th-text="#{firstNameProfile}">First Name</th>
+				<th scope="col" data-th-text="#{lastNameProfile}">Last Name</th>
+				<th scope="col" data-th-text="#{ageProfile}">Age</th>
+				<th scope="col" data-th-text="#{emailProfile}">Email Address</th>
+				<th data-th-if="${profile.oneLanguage == true}"
+					scope="col" data-th-text="#{languageProfile}">Language
+				</th>
+				<th data-th-unless="${profile.oneLanguage == true}"
+					scope="col" data-th-text="#{languagesProfile}">Languages
+				</th>	
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td data-th-text="${profile.firstName}"></td>
+				<td data-th-text="${profile.lastName}"></td>
+				<td data-th-text="${profile.age}"></td>
+				<td data-th-text="${profile.emailAddress}"></td>
+				<td data-th-each="language : ${profile.languages}"
+							data-th-text="${#messages.msg(language)}"></td>
+			</tr>
+		</tbody>
 	</table>
 	<br />
-	 <section data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-    			<span> <a data-th-href="|/app/editProfile/${profile.id}|" data-th-text="|Edit your profile,
+	<section data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+		<div data-th-if="${editProfile}">
+			<span> <a data-th-href="|/app/editProfile/${profile.id}|"
+				data-th-text="|#{editProfile},
     			 ${@sessionManager.loggedInUser.username}|"></a></span>
-    			 <br />
-    			 <span> <a data-th-href="|/app/editUsername/${@sessionManager.loggedInUser.id}|"
-    			 	 data-th-text="|Change your username, ${@sessionManager.loggedInUser.username}|"></a></span>
-    </section>
+			<br /> <span> <a
+				data-th-href="|/app/editUsername/${@sessionManager.loggedInUser.id}|"
+				data-th-text="|#{changeUsername}, ${@sessionManager.loggedInUser.username}|"></a></span>
+		</div>
+	</section>
 	<br />
 	<h2 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-		<span data-th-if="${profile.hasMadePosts}">
-			<span data-th-if="${profile.hasMadeOnePost}">
-				<span data-th-text="|Your Post, ${@sessionManager.loggedInUser.username}"></span>
-			</span>
-			<span data-th-unless="${profile.hasMadeOnePost}">
-				<span data-th-text="|Your Posts, ${@sessionManager.loggedInUser.username}"></span>
-			</span>
+		<span data-th-if="${profile.hasMadePosts}"> <span
+			data-th-if="${profile.hasMadeOnePost}"> <span
+				data-th-text="#{onePost}"></span>
+		</span> <span data-th-unless="${profile.hasMadeOnePost}"> <span
+				data-th-text="#{moreThanOnePost}"></span>
 		</span>
-		<span data-th-unless="${profile.hasMadePosts}">
-			You haven't yet made any posts. <span> <a data-th-href="|/app/post/${@sessionManager.loggedInUser.id}|">Click here to make a post</a></span>	
+		</span> <span data-th-unless="${profile.hasMadePosts}" data-th-text="#{noPostsUser}"> You haven't
+			yet made any posts. <span> <a
+				data-th-href="|/app/post/${@sessionManager.loggedInUser.id}|" data-th-text="#{makePostOffer}">Click
+					here to make a post</a></span>
 		</span>
 	</h2>
 	<h2 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-		<span data-th-if="${profile.hasMadePosts}">
-			<span data-th-if="${profile.hasMadeOnePost}">
-				<span data-th-text="|${profile.user.username}'s Post|"></span>
-			</span>
-			<span data-th-unless="${profile.hasMadeOnePost}">
-				<span data-th-text="|${profile.user.username}'s Posts|"></span>
-			</span>
+		<span data-th-if="${profile.hasMadePosts}"> <span
+			data-th-if="${profile.hasMadeOnePost}"> <span
+				data-th-text="|#{postSingular} ${profile.user.username}"></span>
+		</span> <span data-th-unless="${profile.hasMadeOnePost}"> <span
+				data-th-text="|#{postPlural} ${profile.user.username}|"></span>
 		</span>
-		<span data-th-unless="${profile.hasMadePosts}">
-			<span data-th-text="|${profile.user.username} hasn't yet made any posts|"></span>
+		</span> <span data-th-unless="${profile.hasMadePosts}"> <span
+			data-th-text="|${profile.user.username} #{noPostsOther}|"></span>
 		</span>
 	</h2>
 	<div data-th-if="${profile.hasMadePosts}">
-		<section data-th-each="post : ${profile.posts}">
+		<section data-th-each="post : ${profilePosts}">
 			<div>
-			<br />
-				<span class="alert alert-warning" data-th-text="${post.name}">post name</span>
-				<br /><br />
+				<br /> <span class="alert alert-warning"
+					data-th-text="${post.name}">post name</span> <br /> <br />
 				<div>
 					<span class="alert alert-warning" data-th-text="${post.content}"></span>
-					<br /><br />
+					<br /> <br />
 				</div>
 				<div class="panel-footer">
-				<div data-th-if="${post.author.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-warning" data-th-text="|posted on ${post.postDate}, 
-							at ${post.postTime}, by you|">info</span>
-				</div>
-				<div data-th-unless="${post.author.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-warning" data-th-text="|posted on ${post.postDate},
-							at ${post.postTime} by ${post.author}|">info</span>
-				</div>
-				<br /><br />
+					<div
+						data-th-if="${post.author.id == @sessionManager.loggedInUser.id}">
+						<span class="alert alert-warning"
+							data-th-text="|#{profilePostDate} ${post.postDate}, 
+							 #{profilePostTime} ${post.postTime}, #{profilePreposition} #{loggedInUserProfile}|">info</span>
+					</div>
+					<div
+						data-th-unless="${post.author.id == @sessionManager.loggedInUser.id}">
+						<span class="alert alert-warning"
+							data-th-text="|#{profilePostDate} ${post.postDate},
+							#{profilePostTime} ${post.postTime} #{profilePreposition} ${post.author.username}|">info</span>
+					</div>
+					<br /> <br />
 				</div>
 			</div>
 			<div data-th-if="${post.hasComments}">
 				<br />
 				<div data-th-if="${post.hasOneComment}">
-					<div data-th-text="|Commentary from another user on ${post.name}|"></div>				
+					<div data-th-text="|#{commentaryFromOtherUserProfile} ${post.name}|"></div>
 				</div>
 				<div data-th-unless="${post.hasOneComment}">
-					<div data-th-text="|Commentary from another user or users on ${post.name}|"></div>
+					<div
+						data-th-text="|#{commentaryFromOtherUsersProfile} ${post.name}|"></div>
 				</div>
+				
 				<div data-th-each="postComment : ${post.postComments}">
-				<br />
-					<span class="alert alert-secondary" data-th-text="${postComment.content}">comment</span>
-					
-					<span data-th-if="${postComment.id == @sessionManager.loggedInUser.id}">
-							<span class="alert alert-secondary" 
-							data-th-text="|comment made by you, at ${postComment.commentDate}|"></span>
-					</span>
-					<span data-th-unless="${postComment.id == @sessionManager.loggedInUser.id}">
-							<span class="alert alert-secondary" 
-							data-th-text="|comment made by ${postComment.author}, at ${postComment.commentDate}|"></span>
-					</span>
-					<br />
+					<br /> <span class="alert alert-secondary"
+						data-th-text="${postComment.content}">comment</span> <span
+						data-th-if="${postComment.id == @sessionManager.loggedInUser.id}">
+						<span class="alert alert-secondary"
+						data-th-text="|#{postCommentProfile} #{loggedInUserProfile}, #{postCommentDateProfile} ${postComment.commentDate}, 
+							#{postCommentTimeProfile} ${postComment.commentTime}|"></span>
+					</span> <span
+						data-th-unless="${postComment.id == @sessionManager.loggedInUser.id}">
+						<span class="alert alert-secondary"
+						data-th-text="|#{postCommentProfile} ${postComment.author.username}, #{postCommentDateProfile} ${postComment.commentDate},
+							#{postCommentTimeProfile}, ${postComment.commentTime}|"></span>
+					</span> <br />
 				</div>
 			</div>
+			
 			<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
 				<div data-th-if="${post.editableByAuthor}">
-					<a data-th-href="|/app/editPost/${post.id}|">
-						<span data-th-text="|Edit this post, ${@sessionManager.loggedInUser.username}|"></span></a>
+					<div data-th-if="${editPost}">
+						<a data-th-href="|/app/editPost/${post.id}|"> <span
+							data-th-text="|#{editPostProfile}, ${@sessionManager.loggedInUser.username}|"></span></a>
+					</div>
 				</div>
 				<br />
 				<div data-th-if="${post.deletableByAuthor}">
-					<form id="deletePost" data-th-action="|/app/deletePost/${post.id}|" method="POST">
-						<button class="btn btn-warning" id="deletePostButton" 
-							data-th-text="|DELETE this post, ${@sessionManager.loggedInUser.username}|"></button>
-					</form>
+					<div data-th-if="${deletePost}">
+						<form data-th-id="|deletePost${post.id}|"
+							data-th-action="|/app/deletePost/${post.id}|" method="POST">
+							<button class="btn btn-warning deletePostButton"
+								data-th-data-form="|deletePost${post.id}|"
+								data-th-text="|#{deletePostProfile}, ${@sessionManager.loggedInUser.username}|"></button>
+						</form>
+					</div>
 				</div>
 				<hr />
 			</div>
 		</section>
-			<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-				<a data-th-href="|/app/post/${@sessionManager.loggedInUser.profile.id}|">Make another post</a>
+		<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+			<div data-th-if="${makePost}">
+				<a
+					data-th-href="|/app/post/${@sessionManager.loggedInUser.profile.id}|" 
+					data-th-text="#{makePostOfferProfile}">Make another post</a>
 			</div>
+		</div>
 	</div>
 	<br />
-		<h2 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-			<span data-th-if="${profile.hasMadePostComments}">
-				<span data-th-if="${profile.hasMadeOnePostComment}">
-						Your Post Comment
-				</span>
-				<span data-th-unless="${profile.hasMadeOnePostComment}">
-						Your Post Comments
-				</span>
-			</span>
-			<span data-th-unless="${profile.hasMadePostComments}">
-				You haven't yet commented on any post. <a data-th-href="|/app/timeline|">
-				Go to the timeline to find a comment-worthy post</a>
-			</span>
-		</h2>
-		<h2 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-			<span data-th-if="${profile.hasMadePostComments}">
-				<span data-th-if="${profile.hasMadeOnePostComment}">
-					<span data-th-text="|${profile.user.username}'s Post Comment|"></span>
-				</span>
-				<span data-th-unless="${profile.hasMadeOnePostComment}">
-					<span data-th-text="|${profile.user.username}'s Post Comments|"></span>
-				</span>
-			</span>
-			<span data-th-unless="${profile.hasMadePostComments}">
-				<span data-th-text="|${profile.user.username} hasn't yet commented on any post|"></span>
-			</span>
-		</h2>
-		<div data-th-if="${profile.hasMadePostComments}">
-			<section data-th-each="postComment : ${profile.postComments}">
-			<br />
-				<span class="alert alert-secondary" data-th-text="${postComment.content}">comment</span>
-				<span data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-secondary" data-th-text="|comment made by you,
-						 at ${postComment.commentDate}|"></span>
-				</span>
-				<span data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-secondary" data-th-text="|comment made by ${postComment.author},
-						 at ${postComment.commentDate}|"></span>
-				</span>
-				<span class="alert alert-secondary" data-th-text="|comment made on post ${postComment.post.name}: ${postComment.post.content}|"></span>
-				<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-					<div data-th-if="${postComment.deletableByAuthor}">
-						<br /> <br />
-						<form id="deletePostComment" data-th-action="|/app/deletePostComment/${postComment.id}|" 
-								method="POST">
-							<button id="deletePostCommentButton" class="btn btn-light" data-th-text="|DELETE this post comment, 
-							${@sessionManager.loggedInUser.username}|"></button>
-						</form>
-					</div>
-				</div>
-			</section>
-		</div>
-	<br />
-	<br />
 	<h2 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-		<span data-th-if="${profile.hasMadeTranscriptions}">
-			<span data-th-if="${profile.hasMadeOneTranscription}">
-				Your Transcription
-			</span>
-			<span data-th-unless="${profile.hasMadeOneTranscription}">
-			</span>
-				Your Transcriptions
-		</span>
-		<span data-th-unless="${profile.hasMadeTranscriptions}">
-			You haven't yet transcribed any post. 
-		<a data-th-href="|/app/timeline|">Go to the timeline to find a transcription-worthy post</a>
+		<span data-th-if="${profile.hasMadePostComments}"> <span
+			data-th-if="${profile.hasMadeOnePostComment}" data-th-text="#{postCommentUserProfile}"> Your Post
+				Comment </span> <span data-th-unless="${profile.hasMadeOnePostComment}" data-th-text="#{postCommentsUserProfile}">
+				Your Post Comments </span>
+		</span> <span data-th-unless="${profile.hasMadePostComments}" data-th-text="#{noPostCommentUser}"> You
+			haven't yet commented on any post. 
+			<a data-th-href="|/app/timeline|" data-th-text="#{makePostCommentOfferProfile}"></a>
 		</span>
 	</h2>
 	<h2 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-	<span data-th-if="${profile.hasMadeTranscriptions}">
-		<span data-th-if="${profile.hasMadeOneTranscription}">
-			<span data-th-text="|${profile.user.username}'s Transcription|"></span>
+		<span data-th-if="${profile.hasMadePostComments}"> <span
+			data-th-if="${profile.hasMadeOnePostComment}"> <span
+				data-th-text="|#{postCommentProfileHeader} ${profile.user.username}|"></span>
+		</span> <span data-th-unless="${profile.hasMadeOnePostComment}"> <span
+				data-th-text="|#{postCommentsProfileHeader} ${profile.user.username}|"></span>
 		</span>
-		<span data-th-unless="${profile.hasMadeOneTranscription}">
-			<span data-th-text="|${profile.user.username}'s Transcriptions|"></span>
+		</span> <span data-th-unless="${profile.hasMadePostComments}"> <span
+			data-th-text="|${profile.user.username} #{noPostCommentsProfileOtherUser}|"></span>
 		</span>
-	</span>
-	<span data-th-unless="${profile.hasMadeTranscriptions}">
-		<span data-th-text="|${profile.user.username} hasn't yet transcribed any post|"></span>
-	</span>
+	</h2>
+	<div data-th-if="${profile.hasMadePostComments}">
+		<section data-th-each="postComment : ${profilePostComments}">
+			<br /> <span class="alert alert-secondary"
+				data-th-text="${postComment.content}">comment</span> <span
+				data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-secondary"
+				data-th-text="|#{postCommentProfile} #{loggedInUserProfile},
+						 #{postCommentTimeProfile} ${postComment.commentDate}|"></span>
+			</span> <span
+				data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-secondary"
+				data-th-text="|#{postCommentProfile} ${postComment.author},
+						 #{postCommentTimeProfile} ${postComment.commentDate}|"></span>
+			</span> <span class="alert alert-secondary"
+				data-th-text="|#{parentOfPostComment} ${postComment.post.name}: ${postComment.post.content}|"></span>
+			<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+				<div data-th-if="${postComment.deletableByAuthor}">
+					<div data-th-if="${deletePostComment}">
+						<br /> <br />
+						<form data-th-id="|deletePostComment${postComment.id}|"
+							data-th-action="|/app/deletePostComment/${postComment.id}|"
+							method="POST">
+							<button class="btn btn-light deletePostCommentButton"
+								data-th-data-form="|deletePostComment${postComment.id}|"
+								data-th-text="|#{deletePostCommentProfile}, ${@sessionManager.loggedInUser.username}|"></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<br />
+	<br />
+	<h2 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+		<span data-th-if="${profile.hasMadeTranscriptions}"> <span
+			data-th-if="${profile.hasMadeOneTranscription}" data-th-text="#{userTranscriptionProfile}"> Your
+				Transcription </span> <span
+			data-th-unless="${profile.hasMadeOneTranscription}" data-th-text="#{userTranscriptionsProfile}"> </span>
+		</span> <span data-th-unless="${profile.hasMadeTranscriptions}" data-th-text="#{noTranscriptionUserProfile}"> You
+			haven't yet transcribed any post. 
+			<br />
+			<a data-th-href="|/app/timeline|" data-th-text="#{transcriptionOfferProfile}">Go
+				to the timeline to find a transcription-worthy post</a>
+		</span>
+	</h2>
+	<h2 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+		<span data-th-if="${profile.hasMadeTranscriptions}"> <span
+			data-th-if="${profile.hasMadeOneTranscription}"> <span
+				data-th-text="|#{transcriptionOtherUserProfile} ${profile.user.username}|"></span>
+		</span> <span data-th-unless="${profile.hasMadeOneTranscription}"> <span
+				data-th-text="|#{transcriptionsOtherUserProfile} ${profile.user.username}|"></span>
+		</span>
+		</span> <span data-th-unless="${profile.hasMadeTranscriptions}"> <span
+			data-th-text="|${profile.user.username} #{noTranscriptionOtherUserProfile}|"></span>
+		</span>
 	</h2>
 	<br />
-	<div data-th-if="${profile.hasMadeTranscriptions}">	
-		<section data-th-each="transcription : ${profile.transcriptions}">
-			<span class="alert alert-info" data-th-text="${transcription.name}"></span> 
-			<span class="alert alert-info" data-th-text="${transcription.content}">comment</span>
-			<span data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-				<span class="alert alert-info" data-th-text="|transcription made by you, on ${transcription.transcriptionDate},
-				 at ${transcription.transcriptionTime}|"></span>
-			</span>
-			<span data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-				<span class="alert alert-info" data-th-text="|transcription made by ${transcription.author}, at
+	<div data-th-if="${profile.hasMadeTranscriptions}">
+		<section data-th-each="transcription : ${profileTranscriptions}">
+			<span class="alert alert-info" data-th-text="${transcription.name}"></span>
+			<span class="alert alert-info"
+				data-th-text="${transcription.content}">comment</span> <span
+				data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-info"
+				data-th-text="|#{transcriptionAuthorTimeline} #{transcriptionAuthor}, 
+				#{transcriptionCommentTime} ${transcription.transcriptionTime}, #{transcriptionCommentDate} 
+					${transcription.transcriptionDate}|"></span>
+			</span> <span
+				data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-info"
+				data-th-text="|#{transcriptionAuthorTimeline} ${transcription.author.username}, #{transcriptionCommentTime}
+					 ${transcription.transcriptionTime}, #{transcriptionCommentDate} 
 					 ${transcription.transcriptionDate}|"></span>
 			</span>
-				
-			<div data-th-if="${transcription.hasComments}">
-			</div>
+
+			<div data-th-if="${transcription.hasComments}"></div>
 			<div data-th-unless="${transcription.hasComments}">
-				<hr /> 
+				<hr />
 			</div>
 			<div data-th-if="${transcription.hasComments}">
-			<br />
+				<br />
 				<div data-th-if="${transcription.hasOneComment}">
-					<div data-th-text="|Commentary from another user on ${transcription.name}|"></div>
+					<div
+						data-th-text="|#{commentaryFromOtherUserProfile} ${transcription.name}|"></div>
 				</div>
 				<div data-th-unless="${transcription.hasOneComment}">
-					<div data-th-text="|Commentary another user or users on ${transcription.name}|"></div>
+					<div
+						data-th-text="|#{commentaryFromOtherUsersProfile} ${transcription.name}|"></div>
 				</div>
-				<div data-th-each="transcriptionComment : ${transcription.transcriptionComments}">
-				<br />
+				<div
+					data-th-each="transcriptionComment : ${transcription.transcriptionComments}">
+					<br />
 					<div data-th-if="${transcriptionComment.author.id == profile.id}">
 					</div>
-					<div data-th-unless="${transcriptionComment.author.id == profile.id}">
-						<span class="alert alert-danger" data-th-text="${transcriptionComment.content}">comment</span>
-						<span class="alert alert-danger" data-th-text="|comment made by ${transcriptionComment.author},
-						 at ${transcriptionComment.commentDate}|"></span>	
-					<br /><br />
+					<div
+						data-th-unless="${transcriptionComment.author.id == profile.id}">
+						<span class="alert alert-danger"
+							data-th-text="${transcriptionComment.content}">comment</span> <span
+							class="alert alert-danger"
+							data-th-text="|#{transcriptionCommentMadeBy} ${transcriptionComment.author.username},
+						 #{transcriptionCommentTime} ${transcriptionComment.commentTime},
+						  #{transcriptionCommentDate} ${transcriptionComment.commentDate}|"></span>
+						<br /> <br />
 					</div>
-
 				</div>
 			</div>
 			<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
 				<div data-th-if="${transcription.editableByAuthor}">
 					<a data-th-href="|/app/editTranscription/${transcription.id}|">
 						<span
-						data-th-text="|Edit this transcription, ${@sessionManager.loggedInUser.username}|"></span>
-					</a>
-					<br /><br />
+						data-th-text="|#{editTranscription}, ${@sessionManager.loggedInUser.username}|"></span>
+					</a> <br /> <br />
 				</div>
 				<div data-th-if="${transcription.deletableByAuthor}">
-					<form id="deleteTranscription" data-th-action="|/app/deleteTranscription/${transcription.id}|" >
-						<button id="deleteTranscriptionButton" class="btn btn-info"
-							data-th-text="|DELETE this transcription, ${@sessionManager.loggedInUser.username}|"></button>
+					<form data-th-id="|deleteTranscription${transcription.id}|"
+						data-th-action="|/app/deleteTranscription/${transcription.id}|">
+						<button class="btn btn-info deleteTranscriptionButton"
+							data-th-data-form="|deleteTranscription${transcription.id}"
+							data-th-text="|#{deleteTranscription}, ${@sessionManager.loggedInUser.username}|"></button>
 					</form>
 				</div>
 				<hr />
@@ -328,100 +375,137 @@
 		</section>
 	</div>
 	<h2 data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-		<span data-th-if="${profile.hasMadeTranscriptionComments}">
-			<span data-th-if="${profile.hasMadeOneTranscriptionComment}">
-				Your Transcription Comment
-			</span>
-			<span data-th-unless="${profile.hasMadeOneTranscriptionComment}">
-				Your Transcription Comments
-			</span>
-			
-		</span>
-		<span data-th-unless="${profile.hasMadeTranscriptionComments}">
-			You haven't yet commented on a transcription. 
-			<a data-th-href="|/app/timeline|">Click here to find a comment-worthy transcription</a>
+		<span data-th-if="${profile.hasMadeTranscriptionComments}"> <span
+			data-th-if="${profile.hasMadeOneTranscriptionComment}" 
+			data-th-text="#{oneTranscriptionCommentloggedInUserProfile}"> Your
+				Transcription Comment </span> <span
+			data-th-unless="${profile.hasMadeOneTranscriptionComment}" 
+				data-th-text="#{oneTranscriptionCommentsloggedInUserProfile}">
+				Your Transcription Comments </span>
+
+		</span> <span data-th-unless="${profile.hasMadeTranscriptionComments}" 
+				data-th-text="#{noTranscriptionCommentUserProfile}">
+			You haven't yet commented on a transcription. <a
+			data-th-href="|/app/timeline|" data-th-text="#{transcriptionCommentOfferProfile}">Click here to find a
+				comment-worthy transcription</a>
 		</span>
 	</h2>
 	<h2 data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-		<span data-th-if="${profile.hasMadeTranscriptionComments}">
-			<span data-th-if="${profile.hasMadeOneTranscriptionComment}">
-				<span data-th-text="|${profile.user.username}'s Transcription Comment|"></span>
-			</span>
-			<span data-th-unless="${profile.hasMadeOneTranscriptionComment}">
-				<span data-th-text="|${profile.user.username}'s Transcription Comments|"></span>
-			</span>
+		<span data-th-if="${profile.hasMadeTranscriptionComments}"> <span
+			data-th-if="${profile.hasMadeOneTranscriptionComment}"> <span
+				data-th-text="|#{transcriptionCommentOtherUserProfile} ${profile.user.username}|"></span>
+		</span> <span data-th-unless="${profile.hasMadeOneTranscriptionComment}">
+				<span
+				data-th-text="|#{transcriptionCommentsOtherUserProfile} ${profile.user.username}|"></span>
 		</span>
-		<span data-th-unless="${profile.hasMadeTranscriptionComments}">
-			<span data-th-text="|${profile.user.username} hasn't yet commented on any transcription|"></span>
+		</span> <span data-th-unless="${profile.hasMadeTranscriptionComments}">
+			<span
+			data-th-text="|${profile.user.username} #{noTranscriptionCommentOtherUserProfile}|"></span>
 		</span>
 	</h2>
-
 	<div data-th-if="${profile.hasMadeTranscriptionComments}">
-	<br />
-		<section data-th-each="transcriptionComment : ${profile.transcriptionComments}">
-			<span class="alert alert-danger" data-th-text="${transcriptionComment.content}">comment</span>
-			<span data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-danger" data-th-text="|comment made by you,
-					 on ${transcriptionComment.commentDate}, at ${transcriptionComment.commentTime}|"></span>
-			</span>
-			<span data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
-					<span class="alert alert-danger" data-th-text="|comment made by ${transcriptionComment.author},
-						on ${transcriptionComment.commentDate}, at ${transcriptionComment.commentTime}"></span>
-			</span>
-			<br /><br />
-			<span class="alert alert-danger" data-th-text="|comment made on ${transcriptionComment.transcription.name}: ${transcriptionComment.transcription.content}|"></span>
+		<br />
+		<section
+			data-th-each="transcriptionComment : ${profileTranscriptionComments}">
+			<br />
+			<span class="alert alert-danger"
+				data-th-text="${transcriptionComment.content}">comment</span> <span
+				data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-danger"
+				data-th-text="|#{transcriptionCommentMadeBy} #{transcriptionCommentAuthor},
+					 #{transcriptionCommentDate} ${transcriptionComment.commentDate}, 
+					 #{transcriptionCommentTime} ${transcriptionComment.commentTime}|"></span>
+			</span> <span
+				data-th-unless="${profile.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-danger"
+				data-th-text="|#{transcriptionCommentMadeBy} ${transcriptionComment.author.username},
+						#{transcriptionCommentDate} ${transcriptionComment.commentDate},
+						 #{transcriptionCommentTime} ${transcriptionComment.commentTime}"></span>
+						<br />
+			</span> <br /> <br /> 
+			<div data-th-if="${transcriptionComment.transcription.author.id == @sessionManager.loggedInUser.id}">
+			<span class="alert alert-info"
+				data-th-text="|#{parentOfTranscriptionComment} ${transcriptionComment.transcription.name}:
+				 ${transcriptionComment.transcription.content}, 
+				 #{profilePreposition} #{loggedInUserProfile}|"></span>
+			</div>
+			<div data-th-unless="${transcriptionComment.transcription.author.id == @sessionManager.loggedInUser.id}">
+			<span class="alert alert-info"
+				data-th-text="|#{parentOfTranscriptionComment} ${transcriptionComment.transcription.name}:
+				 ${transcriptionComment.transcription.content}, 
+				 #{profilePreposition} ${transcriptionComment.transcription.author.username}|"></span>
+			</div>
+				 <br /><br /><br />
 			<div data-th-if="${profile.id == @sessionManager.loggedInUser.id}">
 				<div data-th-if="${transcriptionComment.deletableByAuthor}">
-					<br />
-					<form id="deleteTranscriptionComment" data-th-action="|/app/deleteTranscriptionComment/${transcriptionComment.id}|" 
-							method="POST">
-						<button id="deleteTranscriptionCommentButton" class="btn btn-danger" data-th-text="|DELETE this transcription comment, 
-							${@sessionManager.loggedInUser.username}|"></button>
+					<form
+						data-th-id="|deleteTranscriptionComment${transcriptionComment.id}|"
+						data-th-action="|/app/deleteTranscriptionComment/${transcriptionComment.id}|"
+						method="POST">
+						<button class="btn btn-danger deleteTranscriptionCommentButton"
+							data-th-data-form="|deleteTranscriptionComment${transcriptionComment.id}|"
+							data-th-text="|#{deleteTranscriptionComment}, ${@sessionManager.loggedInUser.username}|"></button>
 					</form>
 				</div>
 			</div>
 		</section>
 	</div>
-	
-		<script>
+
+	<script>
 		const handlePost = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this post?")) {
-				document.querySelector("#deletePost").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deletePostButton").addEventListener('click', handlePost);
+		document.querySelectorAll(".deletePostButton").
+			forEach(b=>b.addEventListener('click', handlePost));
 		
 		const handleTranscription = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this transcription?")) {
-				document.querySelector("#deleteTranscription").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deleteTranscriptionButton").addEventListener('click', handleTranscription);
+		document.querySelectorAll(".deleteTranscriptionButton").
+			forEach(b=>b.addEventListener('click', handleTranscription));
 		
 		const handleTranscriptionComment = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this transcription comment?")) {
-				document.querySelector("#deleteTranscriptionComment").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deleteTranscriptionCommentButton").addEventListener('click', handleTranscriptionComment);
-			
+		document.querySelectorAll(".deleteTranscriptionCommentButton").
+			forEach(b=>b.addEventListener('click', handleTranscriptionComment));
+		
 		const handlePostComment = e => {
 			e.preventDefault();
+			console.log(e.target);
 			if (confirm("Do you really want to delete this post comment?")) {
-				document.querySelector("#deletePostComment").submit();
+				document.querySelector("#" + e.target.dataset.form).submit();
 			}
 		};
-		document.querySelector("#deletePostCommentButton").addEventListener('click', handlePostComment);
+		document.querySelectorAll(".deletePostCommentButton").
+			forEach(b=>b.addEventListener('click', handlePostComment));
 		
-	</script>	
+	</script>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
 </html>

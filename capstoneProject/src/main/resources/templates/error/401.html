@@ -8,13 +8,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Unauthorized</title>
+    <title data-th-text="#{unauthorizedTitle}">Unauthorized</title>
   </head>
   <body>
-    <h1 align="center">The language code that you've chosen is unsupported.</h1>
+    <h1 align="center" data-th-text="#{unauthorizedMessage}">The language code that you've chosen is unsupported.</h1>
     <div align="center">
 		<form data-th-action="|/app/timeline|" method="GET">
-			<button class="alert alert-info" type="submit">Click here</button>
+			<button class="alert alert-info" type="submit" data-th-text="#{unauthorizedButton}">Click here</button>
 		</form>
 	</div>
 

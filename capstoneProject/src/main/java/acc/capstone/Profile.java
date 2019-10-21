@@ -30,13 +30,11 @@ public class Profile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;	
-	@NotEmpty(message="this mustn't be empty")
 	private String firstName;
-	@NotEmpty(message="this mustn't be empty")
 	private String lastName;
 	//@NotNull(message="even if you're a newborn, we need something here")
 	private Integer age;
-	@NotNull(message="tell me how you expect to work this application with no language")
+	//@NotNull(message="tell me how you expect to work this application with no language")
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
 	@Size(min=1, max=2, message="either one language or both")
@@ -46,17 +44,17 @@ public class Profile {
 	private String emailAddress;
 	@OneToOne(mappedBy="profile")
 	private User user;
-	@OneToMany(mappedBy="profile")
-	private List<Post> posts;
+	//@OneToMany(mappedBy="profile")
+	//private List<Post> posts;
 	private boolean hasMadePosts;
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="profile")
-	private List<PostComment> postComments;
+	//@OneToMany(fetch=FetchType.EAGER, mappedBy="profile")
+	//private List<PostComment> postComments;
 	private boolean hasMadePostComments;
-	@OneToMany(mappedBy="profile")
-	private List<Transcription> transcriptions;
+	//@OneToMany(mappedBy="profile")
+	//private List<Transcription> transcriptions;
 	private boolean hasMadeTranscriptions;
-	@OneToMany(mappedBy="profile")
-	private List<TranscriptionComment> transcriptionComments;
+	//@OneToMany(mappedBy="profile")
+	//private List<TranscriptionComment> transcriptionComments;
 	private boolean hasMadeTranscriptionComments;
 	private boolean hasMadeOnePost;
 	private boolean hasMadeOnePostComment;
@@ -65,6 +63,10 @@ public class Profile {
 	private boolean oneLanguage;
 	@Enumerated(EnumType.STRING)
 	private Language preferredLanguage;
+	private int numPosts;
+	private int numPostComments;
+	private int numTranscriptions;
+	private int numTranscriptionComments;
 
 	public int getId() {
 		return id;
@@ -121,13 +123,7 @@ public class Profile {
 		this.age = age;
 	}
 	
-	public List<Post> getPosts() {
-		return posts;
-	}
 
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
-	}
 	
 	public boolean isHasMadeOnePostComment() {
 		return hasMadeOnePostComment;
@@ -135,14 +131,6 @@ public class Profile {
 
 	public void setHasMadeOnePostComment(boolean hasMadeOnePostComment) {
 		this.hasMadeOnePostComment = hasMadeOnePostComment;
-	}
-
-	public List<TranscriptionComment> getTranscriptionComments() {
-		return transcriptionComments;
-	}
-
-	public void setTranscriptionComments(List<TranscriptionComment> transcriptionComments) {
-		this.transcriptionComments = transcriptionComments;
 	}
 
 	public boolean isHasMadeTranscriptionComments() {
@@ -161,9 +149,7 @@ public class Profile {
 		this.hasMadePosts = hasMadePosts;
 	}
 
-	public List<PostComment> getPostComments() {
-		return postComments;
-	}
+
 	
 	public boolean isHasMadePostComments() {
 		return hasMadePostComments;
@@ -171,14 +157,6 @@ public class Profile {
 	
 	public void setHasMadePostComments(boolean hasMadePostComments) {
 		this.hasMadePostComments = hasMadePostComments;
-	}
-
-	public List<Transcription> getTranscriptions() {
-		return transcriptions;
-	}
-
-	public void setTranscriptions(List<Transcription> transcriptions) {
-		this.transcriptions = transcriptions;
 	}
 
 	public boolean isHasMadeTranscriptions() {
@@ -189,9 +167,7 @@ public class Profile {
 		this.hasMadeTranscriptions = hasMadeTranscriptions;
 	}
 
-	public void setPostComments(List<PostComment> postComments) {
-		this.postComments = postComments;
-	}
+
 	
 	public boolean isHasMadeOnePost() {
 		return hasMadeOnePost;
@@ -232,10 +208,47 @@ public class Profile {
 	public void setPreferredLanguage(Language preferredLanguage) {
 		this.preferredLanguage = preferredLanguage;
 	}
+	
+	public int getNumPosts() {
+		return numPosts;
+	}
+
+	public void setNumPosts(int numPosts) {
+		this.numPosts = numPosts;
+	}
+
+	public int getNumPostComments() {
+		return numPostComments;
+	}
+
+	public void setNumPostComments(int numPostComments) {
+		this.numPostComments = numPostComments;
+	}
+
+	public int getNumTranscriptions() {
+		return numTranscriptions;
+	}
+
+	public void setNumTranscriptions(int numTranscriptions) {
+		this.numTranscriptions = numTranscriptions;
+	}
+
+	public int getNumTranscriptionComments() {
+		return numTranscriptionComments;
+	}
+
+	public void setNumTranscriptionComments(int numTranscriptionComments) {
+		this.numTranscriptionComments = numTranscriptionComments;
+	}
 
 	@Override
 	public String toString() {
-		return "Profile [languages=" + languages + "]";
+		return "Profile [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", age=" + age
+				+ ", languages=" + languages + "]";
 	}
+
+
+
+	
 	
 }

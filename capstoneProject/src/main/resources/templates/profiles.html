@@ -28,15 +28,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr data-th-each="profile : ${@applicationManager.profiles}">
-    	<span data-th-if="${@sessionManager.loggedInUser.id == profile.id}">
+    <tr data-th-each="user : ${@sessionManager.users}">
+    	<span data-th-if="${@sessionManager.loggedInUser.id == user.id}">
     	</span>
-    	<span data-th-unless="${@sessionManager.loggedInUser.id == profile.id}">
-    		<td data-th-text="${profile.id}"></td>
-			<td data-th-text="${profile.user.username}"></td>
-	 		 <td data-th-text="${profile.firstName}"></td>
-	 	 	<td data-th-text="${profile.lastName}"></td>
-	 	 	<td><a data-th-href="|/app/profile/${profile.id}|" data-th-text="|to ${profile.user.username}'s profile|"></a></td>
+    	<span data-th-unless="${@sessionManager.loggedInUser.id == user.id}">
+    		<td data-th-text="${user.id}"></td>
+			<td data-th-text="${user.username}"></td>
+	 		 <td data-th-text="${user.profile.firstName}"></td>
+	 	 	<td data-th-text="${user.profile.lastName}"></td>
+	 	 	<td><a data-th-href="|/app/profile/${user.id}|" data-th-text="|to ${user.username}'s profile|"></a></td>
     	</span> 	
     </tr>
   </tbody>

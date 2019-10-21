@@ -28,7 +28,6 @@ public class Transcription {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@NotEmpty
 	private String name;
 	private LocalDate transcriptionDate;
 	private LocalTime transcriptionTime;
@@ -40,13 +39,14 @@ public class Transcription {
 	@ManyToOne
 	@JsonBackReference
 	private Profile profile;
-	@NotEmpty(message="no empty transcriptions")
+	//@NotEmpty(message="no empty transcriptions")
 	//@Size(min=4, max=120, message="at the very least, no fewer than four characters, but please")
 	private String content;
 	@OneToMany(mappedBy="transcription") 
 	private List<TranscriptionComment> transcriptionComments;
 	private boolean hasComments;
 	private boolean hasOneComment;
+	private int numTranscriptionComments;
 	private boolean editableByAuthor;
 	private boolean deletableByAuthor;
 	private boolean commentableByAuthor;
@@ -171,6 +171,14 @@ public class Transcription {
 
 	public void setTranscriptionLanguage(Language transcriptionLanguage) {
 		this.transcriptionLanguage = transcriptionLanguage;
+	}
+	
+	public int getNumTranscriptionComments() {
+		return numTranscriptionComments;
+	}
+
+	public void setNumTranscriptionComments(int numTranscriptionComments) {
+		this.numTranscriptionComments = numTranscriptionComments;
 	}
 
 	@Override

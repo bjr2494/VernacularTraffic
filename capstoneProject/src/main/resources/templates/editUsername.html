@@ -8,19 +8,21 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title data-th-text="|Edit Your Username, ${@sessionManager.loggedInUser.username}|"></title>
+    <title data-th-text="|#{editUsernameTitle}"></title>
   </head>
   <body>
-    <h1 data-th-text="|It's High Time You Change Your Username, ${@sessionManager.loggedInUser.username}|"></h1>
-    <h2>Do So Here</h2>
+    <h1 data-th-text="|#{editUsernameWelcome}, ${@sessionManager.loggedInUser.username}|"></h1>
+    <h2 data-th-text="|#{editUsernameContinue}|">Do So Here</h2>
     <br />
-    
-    <form data-th-action="|/app/editUsername/${loggedInUser.id}|" method="POST" data-th-object="${loggedInUser}">
-    	<input type="text" id="username" data-th-field="*{username}" data-th-errorclass="is-invalid" />
+    <a data-th-href="|/app/timeline|" data-th-text="#{toTimelineFromPost}">Back to the Timeline</a>
+    <br />
+    <form data-th-action="|/app/editUsername/${@sessionManager.loggedInUser.id}|" method="POST" 
+    	data-th-object="${username}">
+    	<input class="form-control" type="text" id="username" data-th-field="*{username}" data-th-errorclass="is-invalid" />
     		<div class="invalid-feedback" data-th-errors="*{username}">error</div>
     		<!-- Button trigger modal -->
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-					data-th-text="|Edit your username, ${loggedInUser.username}|">
+					data-th-text="|#{editUsernameChangeUsername}, ${@sessionManager.loggedInUser.username}|">
 			</button>
 
 <!-- Modal -->
@@ -28,17 +30,18 @@
   		<div class="modal-dialog" role="document">
     		<div class="modal-content">
       			<div class="modal-header">
-        	<h5 class="modal-title" id="exampleModalLabel">Profile Changes</h5>
+        	<h5 class="modal-title" id="exampleModalLabel" data-th-text="#{usernameChange}">Username Change</h5>
        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           		<span aria-hidden="true">&times;</span>
    		 	</button>
       			</div>
-     	 <div class="modal-body">
+     	 <div class="modal-body" data-th-text="#{changeUsernameQuestion}">
        		Are you sure that you want to change your username?
      	 </div>
       	<div class="modal-footer">
-        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary">Change My Username</button>
+        	<button type="button" class="btn btn-secondary" data-dismiss="modal"
+        		data-th-text="#{closeModalEditProfile}">Close</button>
+        	<button type="submit" class="btn btn-primary" data-th-text="#{openModalEditUsername}">Change My Username</button>
       </div>
     	</div>
   	</div>

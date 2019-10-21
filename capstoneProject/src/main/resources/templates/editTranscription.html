@@ -1,179 +1,613 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
 
-    <title data-th-text="|Time to Edit the Transcription Called ${transcription.name}|"></title>
-  </head>
-  <body>
-   <h1> Edit your transcription for <span class="alert alert-warning" data-th-text="${post.name}"></span>
-    		by <span class="alert alert-warning" data-th-text="${post.author}"></span>:</h1>
-  	<hr />
-    <h2> <span class="alert alert-warning" data-th-text="${post.content}"></span></h2>
-    <hr />
-    <h3>Again, use the tables below</h3>
-    <h4> <a data-th-href="|/app/timeline|">Or, Again, Go Back to the Timeline</a></h4>
-   
-    <form data-th-action="|/app/editTranscription/${transcription.id}|" method="POST" data-th-object="${transcription}">
-    <textarea class="form-control" id="text" rows=10 cols=80 data-th-field="*{content}" data-th-errorclass="is-invalid">
+<title data-th-text="#{editTranscriptionTitle}"></title>
+</head>
+<body>
+	<h1>
+		<span data-th-text="#{editTranscriptionHeader}"></span> <span
+			class="alert alert-warning" data-th-text="${post.name}"></span> <span
+			data-th-text="#{profilePreposition}"></span> <span
+			class="alert alert-warning" data-th-text="${post.author.username}"></span>:
+	</h1>
+	<hr />
+	<h2>
+		<span class="alert alert-warning" data-th-text="${post.content}"></span>
+	</h2>
+	<hr />
+	<h3>
+		<span data-th-text="#{again}"></span>, <span
+			data-th-text="#{tablesTranscription}"></span>
+	</h3>
+	<h4>
+		<a data-th-href="|/app/timeline|"
+			data-th-text="|#{toTimelineFromPost}|">Or Go Back to the Timeline</a>
+	</h4>
+
+	<form data-th-action="|/app/editTranscription/${transcription.id}|"
+		method="POST" data-th-object="${transcription}">
+		<textarea class="form-control" id="text" rows=10 cols=80
+			data-th-field="*{content}" data-th-errorclass="is-invalid">
 	</textarea>
 		<div class="invalid-feedback" data-th-errors="*{content}"></div>
-	<h2>Consonants</h2>
-	<table class="table">
-  		<thead>
-    		<tr>
-      			<th scope="col"></th>
-     			 <th scope="col">Bilabial</th>
-      			<th scope="col">Labiodental</th>
-      			<th scope="col">Dental</th>
-      			<th scope="col">Alveolar</th>
-      			<th scope="col">Postalveolar</th>
-      			<th scope="col">Retroflex</th>
-      			<th scope="col">Palatal</th>
-      			<th scope="col">Velar</th>
-      			<th scope="col">Uvular</th>
-      			<th scope="col">Pharyngeal</th>
-      			<th scope="col">Glottal</th>
-    		</tr>
-  		</thead>
-  		<tbody>
-    		<tr>
-      			<th scope="row">Stop</th>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessBilabialStop()">&#112;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedBilabialStop()">&#98;</button>
-      				</td>
-      				<td>
-      					<span>none |</span>
-      					<span> none</span>
-      				</td>
-      				<td>
-      					<span>none |</span>
-      					<span> none</span>
-      				</td>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessAlveolarStop()">&#116;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedAlveolarStop()">&#100;</button>
-      				</td>
-      				<td>
-      					<span>none |</span>
-      					<span> none</span>
-      				</td>
-      				<td><button class="btn btn-primary" onClick="event.preventDefault(); voicelessRetroflexStop()">&#648;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedRetroflexStop()">&#598;</button>
-      				</td>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessPalatalStop()">&#99;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedPalatalStop()">&#607;</button>
-      				</td>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessVelarStop()">&#107;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedVelarStop()">&#103;</button>
-      				</td>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicelessUvularStop()">&#113;</button>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedUvularStop()">&#71;</button>
-      				</td>
-      				<td>
-      					<span>none |</span>
-      					<span> n.p.</span>
-      				</td>
-      				<td>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); glottalStop()">&#660;</button>
-      					<span>n.p.</span>
-      				</td>	
-    		</tr>
-    		<tr>
-      			<th scope="row">Nasal</th>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); bilabialNasal()">&#109;</button>
-      				</td>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); labiodentalNasal()">&#625;</button>
-      				</td>
-      				<td></td>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); alveolarNasal()">&#110;</button>
-      				</td>
-      				<td></td>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedRetroflexNasal()">&#627;</button>
-      				</td>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedPalatalNasal()">&#626;</button>
-      				</td>
-      				<td>
-      					<span>none</span>
-    					<button class="btn btn-danger" onClick="event.preventDefault(); voicedVelarNasal()">&#7505;</button>
-      				</td>
-      				<td>
-      					<span>none</span>
-      					<button class="btn btn-primary" onClick="event.preventDefault(); voicedUvularNasal()">&#628;</button>
-      				</td>
-      				<td>
-      					<span>n.p. |</span>
-      					<span> n.p.</span>
-      				</td>
-      				<td>
-      					<span>n.p. |</span>
-      					<span> n.p.</span>
-      				</td>
-			</tr>
-   			<tr>
-      			<th scope="row">Trill</th>
-     				 <td>
-     				 	<span>none</span>
-     				 	<button class="btn btn-primary" onClick="event.preventDefault(); voicedBilabialTrill()">&#665;</button>
-     				 </td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-  			<tr>
-      			<th scope="row">Flap</th>
-     				 <td>Larry</td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-  			<tr>
-      			<th scope="row">Fricative</th>
-     				 <td>Larry</td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-  			<tr>
-      			<th scope="row">Lateral Fricative</th>
-     				 <td>Larry</td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-  			<tr>
-      			<th scope="row">Approximant</th>
-     				 <td>Larry</td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-  			<tr>
-      			<th scope="row">Lateral Approximant</th>
-     				 <td>Larry</td>
-      				<td>the Bird</td>
-      				<td>@twitter</td>
-    		</tr>
-		</tbody>
-	</table>
-	
-	<button type="submit" class="btn btn-secondary">Transcribe Away</button>
+
+		<h2 data-th-text="#{symbolHeader}">Supplemental Symbols</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col" data-th-text="#{stress1}">Primary Stress</th>
+					<th scope="col" data-th-text="#{stress2}">Secondary Stress</th>
+					<th scope="col" data-th-text="#{aspirated}">Aspirated</th>
+					<th scope="col" data-th-text="#{tilde}">Tilde</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); primaryStress()">&#712;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); secondaryStress()">&#716;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); aspirated()">&#688;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); tilde()">&#126;</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+		<h2 data-th-text="#{consonants}">Consonants</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col" width="150" data-th-text="#{bilabial}">Bilabial</th>
+					<th scope="col" width="130" data-th-text="#{labiodental}">Labiodental</th>
+					<th scope="col" width="150" data-th-text="#{dental}">Dental</th>
+					<th scope="col" width="130" data-th-text="#{alveolar}">Alveolar</th>
+					<th scope="col" width="120" data-th-text="#{postalveolar}">Postalveolar</th>
+					<th scope="col" width="130" data-th-text="#{retroflex}">Retroflex</th>
+					<th scope="col" width="150" data-th-text="#{palatal}">Palatal</th>
+					<th scope="col" width="150" data-th-text="#{velar}">Velar</th>
+					<th scope="col" width="150" data-th-text="#{uvular}">Uvular</th>
+					<th scope="col" width="130" data-th-text="#{pharyngeal}">Pharyngeal</th>
+					<th scope="col" width="130" data-th-text="#{glottal}">Glottal</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row" height="30" data-th-text="#{stop}">Stop</th>
+					<td><span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicelessBilabialStop()">&#112;</button></span>
+						<span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicedBilabialStop()">&#98;</button></span>
+					</td>
+					<!-- labiodental -->
+					<td style="background-color: gray"></td>
+					<!-- dental -->
+					<td style="background-color: gray"></td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessAlveolarStop()">&#116;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarStop()">&#100;</button>
+					</td>
+					<!-- postalveolar -->
+					<td style="background-color: gray"></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessRetroflexStop()">&#648;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexStop()">&#598;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessPalatalStop()">&#99;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPalatalStop()">&#607;</button>
+					</td>
+					<td><span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicelessVelarStop()">&#107;</button></span>
+						<span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicedVelarStop()">&#103;</button></span>
+					</td>
+					<td><span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicelessUvularStop()">&#113;</button></span>
+						<span><button class="btn btn-primary"
+								onClick="event.preventDefault(); voicedUvularStop()">&#71;</button></span>
+					</td>
+					<!-- pharyngeal -->
+					<td><span data-th-text="#{none}">none |</span><span>
+							n.p.</span></td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessglottalStop()">&#660;</button>
+						<!-- voiced glottal stop --> <span> n.p.</span>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{nasal}">Nasal</th>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); bilabialNasal()">&#109;</button>
+					</td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); labiodentalNasal()">&#625;</button>
+					</td>
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); alveolarNasal()">&#110;</button>
+					</td>
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexNasal()">&#627;</button>
+					</td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPalatalNasal()">&#626;</button>
+					</td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedVelarNasal()">&#331;</button>
+					</td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedUvularNasal()">&#628;</button>
+					</td>
+					<!-- pharyngeal -->
+					<td style="background-color: black"></td>
+					<!-- glottal -->
+					<td style="background-color: black"></td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{trill}">Trill</th>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedBilabialTrill()">&#665;</button>
+					</td>
+					<!-- labiodental -->
+					<td style="background-color: gray"></td>
+					<!-- dental -->
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarTrill()">&#636;</button></td>
+					<!-- postalveolar  -->
+					<td style="background-color: gray"></td>>
+					<!-- retroflex -->
+					<td style="background-color: gray"></td>
+					<!-- palatal -->
+					<td style="background-color: gray"></td>
+					<!-- velar -->
+					<td style="background-color: black"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedUvularTrill()">&#640;</button>
+					</td>
+					<!-- pharyngeal -->
+					<td style="background-color: gray"></td>
+					<!-- glottal -->
+					<td style="background-color: black"></td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{flap}">Flap</th>
+					<!-- bilabial -->
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedLabiodentalFlap()">&#11377;</button>
+					</td>
+					<!-- dental -->
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarFlap()">&#638;</button>
+					</td>
+					<!-- postalveolar -->
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexFlap()">&#637;</button>
+					</td>
+					<!-- palatal -->
+					<td style="background-color: gray"></td>
+					<!-- velar -->
+					<td style="background-color: black"></td>
+					<!-- uvular -->
+					<td style="background-color: gray"></td>
+					<!-- pharyngeal -->
+					<td style="background-color: gray"></td>
+					<!-- glottal -->
+					<td style="background-color: black"></td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{fricative}">Fricative</th>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessBilabialFricative()">&#632;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedBilabialFricative()">&#946;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessLabiodentalFricative()">&#102;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedLabiodentalFricative()">&#118;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessDentalFricative()">&#952;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedDentalFricative()">&#240;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessAlveolarFricative()">&#115;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarFricative()">&#122;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessPostAlveolarFricative()">&#643;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPostAlveolarFricative()">&#658;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessRetroflexFricative()">&#642;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexFricative()">&#656;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessPalatalFricative()">&#231;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPalatalFricative()">&#669;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessVelarFricative()">&#120;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedVelarFricative()">&#611;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessUvularFricative()">&#967;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedUvularFricative()">&#641;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessPharyngealFricative()">&#295;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPharyngealFricative()">&#661;</button>
+					</td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessGlottalFricative()">&#104;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedGlottalFricative()">&#614;</button>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{lateralFricative}">Lateral
+						Fricative</th>
+					<td style="background-color: black"></td>
+					<td style="background-color: black"></td>
+					<td style="background-color: gray"></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); voicelessAlveolarLateralFricative()">&#620;</button>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarLateralFricative()">&#622;</button></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: black"></td>
+					<td style="background-color: black"></td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{approximant}">Approximant</th>
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedLabiodentalApproximant()">&#651;</button></td>
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarApproximant()">&#633;</button></td>
+					<td style="background-color: gray"></td>
+					<td><span data-th-text="#{none}">none </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexApproximant()">&#635;</button></td>
+					<td><span data-th-text="#{none}">none </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPalatalApproximant()">&#106;</button></td>
+					<td><span data-th-text="#{none}">none </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedVelarApproximant()">&#624;</button></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: black"></td>
+				</tr>
+				<tr>
+					<th scope="row" data-th-text="#{lateralApproximant}">Lateral
+						Approximant</th>
+					<td style="background-color: black"></td>
+					<td style="background-color: black"></td>
+					<td style="background-color: gray"></td>
+					<td><span>n.p. </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedAlveolarLateralApproximant()">&#108;</button>
+					</td>
+					<td style="background-color: gray"></td>
+					<td><span>n.p. </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedRetroflexLateralApproximant()">&#621;</button>
+					</td>
+					<td><span>n.p. </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedPalatalLateralApproximant()">&#654;</button>
+					</td>
+					<td><span>n.p. </span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); voicedVelarLateralApproximant()">
+							&#671;</button></td>
+					<td style="background-color: gray"></td>
+					<td style="background-color: black"></td>
+					<td style="background-color: black"></td>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+
+		<div class="alert alert-info">
+			<span data-th-text="#{info1}">&bull; The button to the left in
+				a given cell designates a voiceless sound; the one to the right
+				aligns with a voiced sound </span> <br /> <span data-th-text="#{info2}">&bull;
+				A fully gray cell indicates that there is no symbol, neither voiced
+				nor voiceless, for the given place and manner of articulation; a
+				fully black one indicates that the place and manner of articulation
+				in question are impossible to make together </span> <br /> <span
+				data-th-text="#{info3}">&bull; "none" equates to the color
+				gray; "n.p." does the same to the color black</span>
+		</div>
+
+		<br />
+		<h2 data-th-text="#{vowels}">Vowels</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col" width="10" data-th-text="#{frontFirstHalf}"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fr</span>
+					</th>
+					<th scope="col" data-th-text="#{frontSecondHalf}">ont</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col" width="10" data-th-text="#{centralFirstHalf}">
+						<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cent</span>
+					</th>
+					<th scope="col" data-th-text="#{centralSecondHalf}">ral</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col" width="10" data-th-text="#{backFirstHalf}"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ba</span>
+					</th>
+					<th scope="col" data-th-text="#{backSecondHalf}">ck</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th data-th-text="#{close}">Close</th>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); closeFrontUnrounded()">&#105;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeFrontRounded()">&#121;</button></td>
+
+					<td></td>
+					<td></td>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); closeCentralUnrounded()">&#616;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeCentralRounded()">&#649;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); closeBackUnrounded()">&#623;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeBackRounded()">&#117;</button></td>
+				</tr>
+				<tr>
+					<th></th>
+				</tr>
+				<tr>
+					<th data-th-text="#{nearClose}">Near-close</th>
+					<td></td>
+					<td></td>
+					<td>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); nearCloseFrontUnrounded()">&#618;</button>
+					</td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nearCloseFrontRounded()">&#655;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nearCloseBackRounded()">&#650;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th data-th-text="#{closeMid}">Close-mid</th>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidFrontUnrounded()">&#101;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidFrontRounded()">&#248;</button></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidCentralUnrounded()">&#600;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidCentralRounded()">&#629;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidBackUnrounded()">&#612;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); closeMidBackRounded()">&#111;</button></td>
+				</tr>
+				<tr>
+					<th></th>
+				</tr>
+				<tr>
+					<th data-th-text="#{mid}">Mid</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault();  midCentral()">&#601;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th data-th-text="#{openMid}">Open-mid</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidFrontUnrounded()">&#603;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidFrontRounded()">&#339;</button></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidCentralUnrounded()">&#604;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidCentralRounded()">&#606;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidBackUnrounded()">&#652;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openMidBackRounded()">&#596;</button></td>
+				</tr>
+				<tr>
+					<th></th>
+				</tr>
+				<tr>
+					<th data-th-text="#{nearOpen}">Near-open</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nearOpenFrontUnrounded()">&#230;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nearOpenCentral()">&#592;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th data-th-text="#{open}">Open</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openFrontUnrounded()">&#97;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openFrontRounded()">&#630;</button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<button class="btn btn-primary"
+							onClick="event.preventDefault(); openBackUnrounded()">&#593;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); openBackRounded()">&#594;</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2 data-th-text="#{nasalVowels}">Nasal Vowels</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th data-th-text="#{lowerCase}">lowercase</th>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nasalA()">&atilde;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nasalO()">&otilde;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); nasalE()">&#7869;</button></td>
+				</tr>
+				<tr>
+					<th data-th-text="#{upperCase}">uppercase</th>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); capitalNasalA()">&#0195;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); capitalNasalO()">&#0213;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); capitalNasalE()">&#7868;</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<button type="submit" class="btn btn-success"
+			data-th-text="#{editTranscriptionButton}">Transcribe Away</button>
 	</form>
-	
+
 	<script>
 		const voicelessBilabialStop =  () => {
 		document.getElementById("text").value+= "\u0070";
@@ -223,7 +657,7 @@
 			document.getElementById("text").value+= "\u0047";
 		}
 		
-		const glottalStop = () => {
+		const voicelessglottalStop = () => {
 			document.getElementById("text").value+= "\u0294";
 		}
 
@@ -248,7 +682,7 @@
 		}
 		
 		const voicedVelarNasal = () => {
-			document.getElementById("text").value+= "\u1D51";
+			document.getElementById("text").value+= "\u014B";
 		}
 		
 		const voicedUvularNasal = () => {
@@ -259,12 +693,321 @@
 			document.getElementById("text").value+= "\u0299";
 		}
 		
+		const voicedAlveolarTrill = () => {
+			document.getElementById("text").value+= "\u027C";
+		}
+		
+		const voicedUvularTrill = () => {
+			document.getElementById("text").value+= "\u0280";
+		}
+		
+		const voicedLabiodentalFlap = () => {
+			document.getElementById("text").value+= "\u2C71";
+		}
+		
+		const voicedAlveolarFlap = () => {
+			document.getElementById("text").value+= "\u027E";
+		}
+		
+		const voicedRetroflexFlap = () => {
+			document.getElementById("text").value+= "\u027D";
+		}
+		
+		const voicelessBilabialFricative = () => {
+			document.getElementById("text").value+= "\u0278";
+		}
+		
+		const voicedBilabialFricative = () => {
+			document.getElementById("text").value+= "\u03B2";
+		}
+	
+		const voicelessLabiodentalFricative = () => {
+			document.getElementById("text").value+= "\u0066";
+		}
+		
+		const voicedLabiodentalFricative = () => {
+			document.getElementById("text").value+= "\u0076";
+		}
+	
+		const voicelessDentalFricative = () => {
+			document.getElementById("text").value+= "\u03B8";
+		}
+		
+		const voicedDentalFricative = () => {
+			document.getElementById("text").value+= "\u00F0";
+		}
+		
+		const voicelessAlveolarFricative = () => {
+			document.getElementById("text").value+= "\u0073";
+		}
+		
+		const voicedAlveolarFricative = () => {
+			document.getElementById("text").value+= "\u007A";
+		}
+		
+		const voicelessPostAlveolarFricative = () => {
+			document.getElementById("text").value+= "\u0283";
+		}
+		
+		const voicedPostAlveolarFricative = () => {
+			document.getElementById("text").value+= "\u0292";
+		}
+		
+		const voicelessRetroflexFricative = () => {
+			document.getElementById("text").value+= "\u0282";
+		}
+		
+		const voicedRetroflexFricative = () => {
+			document.getElementById("text").value+= "\u0290";
+		}
+		
+		const voicelessPalatalFricative = () => {
+			document.getElementById("text").value+= "\u00E7";
+		}
+		
+		const voicedPalatalFricative = () => {
+			document.getElementById("text").value+= "\u029D";
+		}
+		
+		const voicelessVelarFricative = () => {
+			document.getElementById("text").value+= "\u0078";
+		}
+		
+		const voicedVelarFricative = () => {
+			document.getElementById("text").value+= "\u0263";
+		}
+		
+		const voicelessUvularFricative = () => {
+			document.getElementById("text").value+= "\u03C7";
+		}
+		
+		const voicelessPharyngealFricative = () => {
+			document.getElementById("text").value+= "\u0127";
+		}
+		
+		const voicedPharyngealFricative = () => {
+			document.getElementById("text").value+= "\u0295";
+		}
+		
+		const voicelessGlottalFricative = () => {
+			document.getElementById("text").value+= "\u0068";
+		}
+		
+		const voicedGlottalFricative = () => {
+			document.getElementById("text").value+= "\u0266";
+		} 
+		
+		const voicelessAlveolarLateralFricative = () => {
+			document.getElementById("text").value+= "\u026C";
+		} 
+		
+		const voicedAlveolarLateralFricative = () => {
+			document.getElementById("text").value+= "\u026E";
+		} 
+		
+		const voicedLabiodentalApproximant = () => {
+			document.getElementById("text").value+= "\u028B";
+		} 
+		
+		const voicedAlveolarApproximant = () => {
+			document.getElementById("text").value+= "\u0279";
+		}
+		
+		const voicedRetroflexApproximant = () => {
+			document.getElementById("text").value+= "\u027B";
+		}
+		
+		const voicedPalatalApproximant = () => {
+			document.getElementById("text").value+= "\u006A";
+		}
+		
+		const voicedVelarApproximant = () => {
+			document.getElementById("text").value+= "\u0270";
+		}
+		
+		const voicedAlveolarLateralApproximant = () => {
+			document.getElementById("text").value+= "\u006C";
+		}
+		
+		const voicedRetroflexLateralApproximant = () => {
+			document.getElementById("text").value+= "\u026D";
+		}
+		
+		const voicedPalatalLateralApproximant = () => {
+			document.getElementById("text").value+= "\u028E";
+		}
+		
+		const voicedVelarLateralApproximant = () => {
+			document.getElementById("text").value+= "\u029F";
+		}
+		
+		const closeFrontUnrounded = () => {
+			document.getElementById("text").value+="\u0069";
+		}
+		
+		const closeFrontRounded = () => {
+			document.getElementById("text").value+="\u0079";
+		}
+		
+		const closeCentralUnrounded = () => {
+			document.getElementById("text").value+="\u0268";
+		}
+		
+		const closeCentralRounded = () => {
+			document.getElementById("text").value+="\u0289";
+		}
+		
+		const closeBackUnrounded = () => {
+			document.getElementById("text").value+="\u026F";
+		}
+		
+		const closeBackRounded = () => {
+			document.getElementById("text").value+="\u0075";
+		}
+		
+		const nearCloseFrontUnrounded = () => {
+			document.getElementById("text").value+="\u026A";
+		}
+		
+		const nearCloseFrontRounded = () => {
+			document.getElementById("text").value+="\u028F";
+		}
+		
+		const nearCloseBackRounded = () => {
+			document.getElementById("text").value+="\u028A";
+		}
+		
+		const closeMidFrontUnrounded = () => {
+			document.getElementById("text").value+="\u0065";
+		}
+		
+		const closeMidFrontUnRounded = () => {
+			document.getElementById("text").value+="\u00F8";
+		}
+		
+		const closeMidCentralUnrounded = () => {
+			document.getElementById("text").value+="\u0258";
+		}
+		
+		const closeMidCentralRounded = () => {
+			document.getElementById("text").value+="\u0275";	
+		}
+		
+		const closeMidBackUnrounded = () => {
+			document.getElementById("text").value+="\u0264";
+		}
+		
+		const closeMidBackRounded = () => {
+			document.getElementById("text").value+="\u006F";
+		}
+		
+		const midCentral = () => {
+			document.getElementById("text").value+="\u0259";
+		}
+		
+		const openMidFrontUnrounded = () => {
+			document.getElementById("text").value+="\u025B";
+		}
+		
+		const openMidFrontRounded = () => {
+			document.getElementById("text").value+="\u0153";
+		}
+		
+		const openMidCentralUnrounded = () => {
+			document.getElementById("text").value+="\u025C";
+		}
+		
+		const openMidCentralRounded = () => {
+			document.getElementById("text").value+="\u025E";
+		}
+		
+		const openMidBackUnrounded = () => {
+			document.getElementById("text").value+="\u028C";
+		}
+		
+		const openMidBackRounded = () => {
+			document.getElementById("text").value+="\u0254";
+		}
+	
+		const nearOpenFrontUnrounded = () => {
+			document.getElementById("text").value+="\u00E6";
+		}
+		
+		const nearOpenCentral = () => {
+			document.getElementById("text").value+="\u0250";
+		}
+
+		const openFrontUnrounded = () => {
+			document.getElementById("text").value+="\u0061";
+		}
+		
+		const openFrontRounded = () => {
+			document.getElementById("text").value+="\u0276";
+		}
+		
+		const openBackUnrounded = () => {
+			document.getElementById("text").value+="\u0251";
+		}
+		
+		const openBackRounded = () => {
+			document.getElementById("text").value+="\u0252";
+		}
+		
+		const primaryStress = () => {
+			document.getElementById("text").value+="\u02C8";
+		}
+		
+		const secondaryStress = () => {
+			document.getElementById("text").value+="\u02CC";
+		}
+		
+		const aspirated = () => {
+			document.getElementById("text").value+="\u02B0";
+		}
+		
+		const tilde = () => {
+			document.getElementById("text").value+="\u007E";
+		}
+		
+		const nasalA = () => {
+			document.getElementById("text").value+="\u00E3";
+		}
+		
+		const nasalO = () => {
+			document.getElementById("text").value+="\u00F5";
+		}
+		
+		const nasalE = () => {
+			document.getElementById("text").value+="\u1EBD";
+		}
+		
+		const capitalNasalA = () => {
+			document.getElementById("text").value+="\u00C3";
+		}
+		
+		const capitalNasalO = () => {
+			document.getElementById("text").value+="\u00D5";
+		}
+		
+		const capitalNasalE = () => {
+			document.getElementById("text").value+="\u1EBC";
+		}
+		 
 	</script>
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+	</form>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
 </html>

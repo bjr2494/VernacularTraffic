@@ -1,72 +1,101 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
 
-    <title data-th-text="|Make a Transcription Comment, ${@sessionManager.loggedInUser.username}|"></title>
-  </head>
-  <body>
-  	<h1>Make a Comment on <span class="alert alert-success" data-th-text="${transcription.name}"></span>
-  		by <span class="alert alert-success" data-th-text="${transcription.author}"></span>:
-  	</h1>
-  	<br />
-  	<h2> <span class="alert alert-success" data-th-text="${transcription.content}"></span></h2>
-	<br />
-	<h1>The Transcription's Post is <span class="alert alert-warning" data-th-text="${post.name}"></span>
-		by <span class="alert alert-warning" data-th-text="${post.author}"></span>:
+<title data-th-text="#{transcriptionCommentTitle}"></title>
+</head>
+<body>
+
+	<h1>
+		<span data-th-text="|#{transcriptionCommentHeader}"></span> <br /> <br />
+		<span class="alert alert-success" data-th-text="${transcription.name}"></span>
+		<span data-th-text="#{profilePreposition}"></span> <span
+			class="alert alert-success"
+			data-th-text="${transcription.author.username}"></span>:
 	</h1>
 	<br />
-	<h2> <span class="alert alert-warning" data-th-text="${post.content}"></span></h2>
-	<div data-th-if="${transcription.hasComments == false}">
-	  	<h2> <a data-th-href="|/app/timeline|">Or Go Back to the Timeline</a></h2>
-	</div>
+	<h2>
+		<span class="alert alert-success"
+			data-th-text="${transcription.content}"></span>
+
+	</h2>
 	<br />
-  	<h4 data-th-if="${transcription.hasComments}">
-  		<span data-th-if="${transcription.hasOneComment}">
-  			<span data-th-text="|${transcription.name}'s Comment So Far|"></span>
-  		</span>
-  		<span data-th-unless="${transcription.hasOneComment}">
-  		<span data-th-text="|${transcription.name}'s Comments So Far|"></span>
-  		</span>
-  	</h4>
-  	<div data-th-if="${transcription.hasComments}">
-  		<span data-th-each="tc : ${transcription.transcriptionComments}">
-  			<span class="btn btn-danger" data-th-text="${tc.content}">comment</span>
-  			<br /><br />
-				<span class="btn btn-danger">transcription comment made by</span> 
-					<span data-th-if="${@sessionManager.loggedInUser.id == tc.author.id}">
-								<span class="btn btn-danger" data-th-text="|you, at ${tc.commentDate}|">
-								</span>
-					</span>
-					<span data-th-unless="${@sessionManager.loggedInUser.id == tc.author.id}">
-								<span class="btn btn-danger"> <a data-th-href="|/app/profile/${tc.author.id}|" 
-									data-th-text="${tc.author}"></a>, 
-									at<span class="btn btn-danger" data-th-text="${tc.commentDate}"></span>	
-								</span>
-					</span>
-						<br /><br />
-  		</span>
-	<h2> <a data-th-href="|/app/timeline|">Or Go Back to the Timeline</a></h2>
-  	</div>
-  	<form data-th-action="|/app/transcriptionComment/${transcription.id}|" method="POST" 
-  			data-th-object="${transcriptionComment}">
-  			<label for="content"></label>
-  		<textarea class="form-control" placeholder="Here is Where the Comment Goes"
-			rows="6" cols="50" id="content" data-th-field="*{content}" data-th-errorclass="is-invalid">
+	<hr />
+	<h4 data-th-if="${transcription.hasComments}">
+		<span data-th-if="${transcription.hasOneComment}"> <span
+			data-th-text="|#{oneCommentTranscriptionComment} ${transcription.name}|"></span>
+		</span> <span data-th-unless="${transcription.hasOneComment}"> <span
+			data-th-text="|#{plusOneCommentTranscriptionComment} ${transcription.name}|"></span>
+		</span>
+	</h4>
+	<div data-th-if="${transcription.hasComments}">
+		<div data-th-each="tc : ${transcription.transcriptionComments}">
+			<br /> <span class="alert alert-danger" data-th-text="${tc.content}">
+			</span> <br /> <br /> <span class="alert alert-danger"
+				data-th-text="#{transcriptionCommentPage}">Comment made by</span> <span
+				data-th-if="${tc.author.id == @sessionManager.loggedInUser.id}">
+				<br /> <br /> <span class="alert alert-danger"
+				data-th-text="|#{loggedInUserProfile},
+				 #{transcriptionDateTimeline} ${tc.commentDate}, #{transcriptionTimeTimeline} ${tc.commentTime}|"></span>
+			</span> <br /> <br /> <span
+				data-th-unless="${tc.author.id == @sessionManager.loggedInUser.id}">
+				<span class="alert alert-danger"
+				data-th-text="|${tc.author.username}, 
+					#{transcriptionDateTimeline} ${tc.commentDate}, #{transcriptionTimeTimeline} ${tc.commentTime}|"></span>
+			</span> <br /> <br />
+		</div>
+	</div>
+
+	<h3>
+		<span data-th-text="#{transcriptionCommentTranscriptionPost}"></span>
+		<span class="alert alert-warning" data-th-text="${post.name}"></span>
+		<span data-th-text="#{transcriptionCommentAdditional}"></span> <span
+			class="alert alert-warning" data-th-text="${post.author.username}"></span>:
+	</h3>
+	<br />
+	<h2>
+		<span class="alert alert-warning" data-th-text="${post.content}"></span>
+	</h2>
+	<br />
+	<h2>
+		<a data-th-href="|/app/timeline|"
+			data-th-text="|#{toTimelineFromPost}|">Or Go Back to the Timeline</a>
+	</h2>
+	<form data-th-action="|/app/transcriptionComment/${transcription.id}|"
+		method="POST" data-th-object="${transcriptionComment}">
+		<label for="content"></label>
+		<textarea class="form-control"
+			data-th-placeholder="#{transcriptionCommentPlaceholder}" rows="6"
+			cols="50" id="content" data-th-field="*{content}"
+			data-th-errorclass="is-invalid">
 		</textarea>
-			<div class="invalid-feedback" data-th-errors="*{content}"></div>
-		<button type="submit" class="btn btn-primary">Post It</button>
-  	</form>
-   </body>
-      <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+		<div class="invalid-feedback" data-th-errors="*{content}"></div>
+		<button type="submit" class="btn btn-primary"
+			data-th-text="#{transcriptionCommentButton}">Post It</button>
+	</form>
+</body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+	crossorigin="anonymous"></script>
+</body>
 </html>

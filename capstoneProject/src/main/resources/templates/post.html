@@ -13,78 +13,289 @@
 	crossorigin="anonymous">
 
 <title
-	data-th-text="|Make a Post, ${@sessionManager.loggedInUser.username}|"></title>
+	data-th-text="|#{postTitle}, ${@sessionManager.loggedInUser.username}|"></title>
 </head>
 <body>
 	<h1
-		data-th-text="|Go On and Make Your Post, ${@sessionManager.loggedInUser.username}|"></h1>
+		data-th-text="|#{postFirstHeader}, ${@sessionManager.loggedInUser.username}|"></h1>
 	<br />
 	<h2>
-		<a data-th-href="|/app/timeline|">Or Go Back to the Timeline</a>
+		<a data-th-href="|/app/timeline|" data-th-text="|#{toTimelineFromPost}|">Or Go Back to the Timeline</a>
 	</h2>
 	<br />
 	<div data-th-if="${postLanguageChoice}">
 		<a data-th-href="|/app/postLanguagePreference/#{language}|"> <span
-			data-th-text="#{languagePreference}"></span></a>
+			data-th-text="#{postLanguage}"></span></a>
 	</div>
-	
+	<br />
+	<div data-th-if="${message}">
+		<br /> <span class="alert alert-warning" data-th-text="${message}"></span>
+		<br /> <br />
+	</div>
 	<form
 		data-th-action="|/app/post/${@sessionManager.loggedInUser.profile.id}|"
 		method="POST" data-th-object="${post}">
-		<label for="name of post">Name of Post</label> <input type="text"
-			id="name" size="30" class="form-control"
-			placeholder="Please give the post a decent name, between four and twenty-five characters"
-			data-th-field="*{name}" data-th-errorclass="is-invalid" />
+		<label for="name of post" data-th-text="#{postName}">Name of
+			Post</label> <input type="text" id="name" size="30" class="form-control"
+			data-th-placeholder="#{postNamePlaceholder}" data-th-field="*{name}"
+			data-th-errorclass="is-invalid" />
 		<div class="invalid-feedback" data-th-errors="*{name}"></div>
-		<br /> <label for="content of post">The Post Itself</label>
-		<textarea class="form-control" id="content"
-			placeholder="At least five characters and no more than one-hundred and fifty"
-			rows="6" cols="150" data-th-field="*{content}"
-			data-th-errorclass="is-invalid">
+		<br /> <label for="content of post" data-th-text="#{postContent}">The
+			Post Itself</label>
+		<textarea class="form-control" id="text"
+			data-th-placeholder="#{postContentPlaceholder}" rows="6" cols="150"
+			data-th-field="*{content}" data-th-errorclass="is-invalid">
 		</textarea>
 		<div class="invalid-feedback" data-th-errors="*{content}"></div>
-		<button type="submit" class="btn btn-primary">Post It</button>
+
+		<div data-th-if="${extraLetters}">
+			<br />
+			<h3>Les Lettres Accentuées</h3>
+			<table class="table table-bordered">
+
+				<tbody>
+				<thead>
+					<tr>
+						<th scope="row"></th>
+						<td>a accent grave</td>
+						<td>a-e entrelacé</td>
+						<td>e accent grave</td>
+						<td>e accent aigu</td>
+						<td>e circonflexe</td>
+						<td>e tréma</td>
+						<td>i circonflexe</td>
+						<td>i tréma</td>
+						<td>o circonflexe</td>
+						<td>u circonflexe</td>
+						<td>c cédille</td>
+						<td>o-e entrelacé</td>
+					</tr>
+				</thead>
+				<tr>
+					<th scope="row">en miniscule</th>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); aAccentGraveLC()">&#224;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); aeEntrelaceLC()">&#230;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eAccentGraveLC()">&#232;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eAccentAiguLC()">&#233;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eCirconflexeLC()">&#234;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eTremaLC()">&#235;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); iCirconflexeLC()">&#238;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); iTremaLC()">&#239;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); oCirconflexeLC()">&#244;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); uCirconflexeLC()">&#251;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); cCedilleLC()">&#231;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); oeEntrelaceLC()">&#339;</button>
+					</span></td>
+				</tr>
+				<tr>
+					<th scope="row">en majuscule</th>
+						<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); aAccentGraveUC()">&#192;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); aeEntrelaceUC()">&#198;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eAccentGraveUC()">&#200;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eAccentAiguUC()">&#201;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eCirconflexeUC()">&#202;</button>
+					</span></td>
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); eTremaUC()">&#203;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); iCirconflexeUC()">&#206;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); iTremaUC()">&#207;</button>
+					</span></td>
+
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); oCirconflexeUC()">&#212;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); uCirconflexeUC()">&#219;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); cCedilleUC()">&#199;</button>
+					</span></td>
+					
+					<td><span>
+							<button class="btn btn-primary"
+								onClick="event.preventDefault(); oeEntrelaceUC()">&#338;</button>
+					</span></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<button type="submit" class="btn btn-primary"
+			data-th-text="#{submitButtonPost}">Post It</button>
+
 	</form>
-	<br />
-	<table class="table table-bordered">
 
-		<tbody>
-			<tr>
-				<th scope="row">lower-case</th>
-				<td>a accent grave</td>
-				<td>a circonflex</td>
-				<td>pressed-together ae</td>
-				<td>e accent grave</td>
-				<td>e accent aigu</td>
-				<td>e circonflex</td>
-				<td>dotted e</td>
-				<td>i circonflex</td>
-				<td>dotted i</td>
-				<td>o circonflex</td>
-				<td>u accent grave</td>
-				<td>u circonflex</td>
-				<td>dotted u</td>
-				<td>c with circonflex</td>
-				<td>pressed-together oe</td>
-
-				<td>FOLLOWING ARE for SPANISH</td>
-				<td>a accent aigu</td>
-				<td>e accent aigu</td>
-				<td>i accent aigu</td>
-				<td>o accent aigu</td>
-				<td>u accent aigu</td>
-				<td>dotted u</td>
-				<td>n with tilde</td>
-				<td>upside-down question mark</td>
-				<td>upside-down exclamation mark</td>
-			</tr>
-			<tr>
-				<th scope="row">upper-case of the same ones</th>
-			</tr>
-		</tbody>
-	</table>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+	<script>
+		const aAccentGraveLC = () => {
+			document.getElementById("text").value+= "\u00E0";
+		}
+		
+		const aeEntrelaceLC = () => {
+			document.getElementById("text").value+= "\u00E6";
+		}
+		
+		const eAccentGraveLC = () => {
+			document.getElementById("text").value+= "\u00E8";
+		}
+		
+		const eAccentAiguLC = () => {
+			document.getElementById("text").value+= "\u00E9";
+		}
+		
+		const eCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00EA";
+		}
+		
+		const eTremaLC = () => {
+			document.getElementById("text").value+= "\u00EB";
+		}
+		
+		const iCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00EE";
+		}
+		
+		const iTremaLC = () => {
+			document.getElementById("text").value+= "\u00EF";
+		}
+		
+		const oCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00F3";
+		}
+		
+		const uCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00FB";
+		}
+		
+		const cCedilleLC = () => {
+			document.getElementById("text").value+= "\u00E7";
+		}
+		
+		const oeEntrelaceLC = () => {
+			document.getElementById("text").value+= "\u0153";
+		}
+		
+		
+		const aAccentGraveUC = () => {
+			document.getElementById("text").value+= "\u00C0";
+		}
+		
+		const aeEntrelaceUC = () => {
+			document.getElementById("text").value+= "\u00C6";
+		}
+		
+		const eAccentGraveUC = () => {
+			document.getElementById("text").value+= "\u00C8";
+		}
+		
+		const eAccentAiguUC = () => {
+			document.getElementById("text").value+= "\u00C9";
+		}
+		
+		const eCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00CA";
+		}
+		
+		const eTremaUC = () => {
+			document.getElementById("text").value+= "\u00CB";
+		}
+		
+		const iCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00CE";
+		}
+		
+		const iTremaUC = () => {
+			document.getElementById("text").value+= "\u00CF";
+		}
+		
+		const oCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00D4";
+		}
+		
+		const uCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00DB";
+		}
+		
+		const cCedilleUC = () => {
+			document.getElementById("text").value+= "\u00C7";
+		}
+		
+		const oeEntrelaceUC = () => {
+			document.getElementById("text").value+= "\u0152";
+		}
+	
+	</script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>

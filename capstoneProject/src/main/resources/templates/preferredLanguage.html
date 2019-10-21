@@ -8,11 +8,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Language Preference</title>
+    <title data-th-text="${languagePreferenceTitle}">Language Preference</title>
   </head>
   <body>
-    <h1 data-th-text="|Way to Be More than Monolingual, ${@sessionManager.loggedInUser.username}!|"></h1>
-    <h2>Now You Need to Choose Your Preferred Language: </h2>
+    <h1 data-th-text="|#{moreThanMonolingual}, ${@sessionManager.loggedInUser.username}!|"></h1>
+    <h2 data-th-text="${nextHeaderLanguagePreference}">Now You Need to Choose Your Preferred Language: </h2>
     
     <form data-th-action="|/app/preferredLanguageProfileCreation/${profile.id}|" method="POST" 
     		data-th-object="${preferredLanguage}">
@@ -24,7 +24,7 @@
 			</select>
 	  				<div class="invalid-feedback" data-th-errors="*{name}"></div>
     	</div>
-    		<button type="submit">solidify the preference</button>
+    		<button type="submit" data-th-text="#{langPrefButton}">solidify the preference</button>
     </form>
 
     <!-- Optional JavaScript -->

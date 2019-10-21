@@ -1,8 +1,12 @@
 package acc.capstone;
 
 import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -43,133 +49,166 @@ public class TimelineController {
 	ApplicationManager applicationManager;
 
 	private final static int PAGE_SIZE = 5;
+	private static final String LOCALE_ATTR = "language";
 
 	@GetMapping("/timeline")
-	public String timeline(Model model, RedirectAttributes redirect) {
-		//System.out.println(this.sessionManager.getLoggedInUser());
+	public String timeline(Model model, RedirectAttributes redirect, HttpServletRequest request) {
+		// System.out.println(this.sessionManager.getLoggedInUser());
+
+		Locale whichLocale = localeResolverforTimeline().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message",
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
 			return "redirect:/app/login";
 		}
 
-		/*
-		 * if (numberOfLanguages()) { model.addAttribute("timelineLanguageChange",
-		 * "Click here to change your language"); }
-		 */
+		Profile profile = profileRepository.findByUser(this.sessionManager.getLoggedInUser());
+
+		if (profile == null) {
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("error", "You need to first finish creating your profile");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("error", "Il faut que vous finissiez d'abord créer votre profil");
+			}
+			return "redirect:/app/createProfile/" + this.sessionManager.getLoggedInUser().getId();
+		}
 
 		PageRequest page = PageRequest.of(0, PAGE_SIZE, Sort.by(Order.desc("id")));
-		Page<Post> postPage = postRepository.findAll(page);
-		model.addAttribute("posts", postPage);
 
-		for (Post p : postRepository.findAll()) {
-			if (this.sessionManager.getLoggedInUser().getId() == p.getAuthor().getId()) {
-				if (p.isHasComments() == false && p.isHasTranscription() == false) {
-					p.setCommentableByAuthor(false);
-					p.setEditableByAuthor(true);
-					p.setDeletableByAuthor(true);
+		if (profile.getLanguages().size() == 1) {
+
+			Page<Post> postPage = postRepository.findAllByPostLanguage(
+					this.sessionManager.getLoggedInUser().getProfile().getLanguages().get(0), page);
+			model.addAttribute("posts", postPage);
+
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				if (profile.getLanguages().get(0) != Language.ENGLISH) {
+					redirect.addFlashAttribute("warning", "Votre langue choisie ne figure pas sur votre profil. "
+							+ "Veuillez changer votre langue ou ajouter la langue actuelle à votre profil.");
+					return "redirect:/app/profile/" + profile.getId();
 				}
-
-				if (p.isHasComments() == false && p.isHasTranscription() == true) {
-					p.setCommentableByAuthor(false);
-					p.setEditableByAuthor(false);
-					p.setDeletableByAuthor(false);
-				}
-
-				if (p.isHasComments() == true) {
-					p.setCommentableByAuthor(true);
-					p.setEditableByAuthor(false);
-					p.setDeletableByAuthor(false);
-
-					PostComment max = p.getPostComments().get(0);
-
-					for (PostComment pc : p.getPostComments()) {
-						pc.setDeletableByAuthor(false);
-						if (pc.getCommentDate().isAfter(max.getCommentDate())) {
-							max = pc;
-							max.setDeletableByAuthor(true);
-						}
-						if (pc.getCommentDate().isEqual(max.getCommentDate())) {
-							if (pc.getCommentTime().isAfter(max.getCommentTime())) {
-								max = pc;
-								max.setDeletableByAuthor(true);
-							}
-						}
-					}
-
-				}
+				model.addAttribute("languageMessage", "Your language is English");
 			}
 
-			if (this.sessionManager.getLoggedInUser().getId() != p.getAuthor().getId()) {
-				if (p.isHasTranscription() == true) {
-					if (p.getTranscription().getAuthor().getId() == this.sessionManager.getLoggedInUser().getId()) {
-						if (p.getTranscription().isHasComments() == true) {
-							p.getTranscription().setCommentableByAuthor(true);
-							p.getTranscription().setEditableByAuthor(false);
-							p.getTranscription().setDeletableByAuthor(false);
-
-							TranscriptionComment max = p.getTranscription().getTranscriptionComments().get(0);
-
-							for (TranscriptionComment tc : p.getTranscription().getTranscriptionComments()) {
-								tc.setDeletableByAuthor(false);
-								if (tc.getCommentDate().isAfter(max.getCommentDate())) {
-									max = tc;
-									max.setDeletableByAuthor(true);
-								}
-								if (tc.getCommentDate().isEqual(max.getCommentDate())) {
-									if (tc.getCommentTime().isAfter(max.getCommentTime())) {
-										max = tc;
-										max.setDeletableByAuthor(true);
-									}
-								}
-							}
-						}
-						if (p.getTranscription().isHasComments() == false) {
-							p.getTranscription().setCommentableByAuthor(false);
-							p.getTranscription().setEditableByAuthor(true);
-							p.getTranscription().setDeletableByAuthor(true);
-						}
-					}
+			if (whichLocale.equals(Locale.FRENCH)) {
+				if (profile.getLanguages().get(0) != Language.FRENCH) {
+					redirect.addFlashAttribute("warning", "Your chosen language is not listed on your profile. "
+							+ "Please change your language or add the current one to your profile's langauges");
+					return "redirect:/app/profile/" + profile.getId();
 				}
+				model.addAttribute("languageMessage", "Votre Langue Est Français");
 			}
-		}	
-		
-		
-			List<Post> posts = postRepository.findAllByOrderByIdDesc();
-			this.applicationManager.setNumPosts(posts.size());
+		}
 
-			String plural = posts.size() == 1 ? "Post" : "Posts";
-			this.applicationManager.setPlural(plural);
+		if (profile.getLanguages().size() == 2) {
 
-			String verb = posts.size() == 1 ? "Is" : "Are";
-			this.applicationManager.setVerb(verb);
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				if (profile.getPreferredLanguage().equals(Language.ENGLISH))
+					model.addAttribute("languageMessage", "Your languages are English and French");
+				if (profile.getPreferredLanguage().equals(Language.FRENCH))
+					model.addAttribute("languageMessage", "Your languages are French and English");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				if (profile.getPreferredLanguage().equals(Language.FRENCH))
+					model.addAttribute("languageMessage", "Vos Langues Sont Français et Anglais");
+				if (profile.getPreferredLanguage().equals(Language.ENGLISH))
+					model.addAttribute("languageMessage", "Vos Langues Sont Anglais et Français");
+			}
+
+			model.addAttribute("languageChange", "change your language");
+			Page<Post> postPage = postRepository.findAll(page);
+			model.addAttribute("posts", postPage);
+		}
 
 		return "timeline";
 	}
 
 	@GetMapping("/timeline/{pageNumber}")
-	public String timeline(Model model, @PathVariable int pageNumber, RedirectAttributes redirect) {
+	public String timeline(Model model, @PathVariable int pageNumber, RedirectAttributes redirect,
+			HttpServletRequest request) {
+		Locale whichLocale = localeResolverforTimeline().resolveLocale(request);
 		if (isLoggedIn()) {
-			redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				redirect.addFlashAttribute("message",
+						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
+			}
 			return "redirect:/app/login";
 		}
 
-		/*
-		 * if (numberOfLanguages()) { model.addAttribute("timelineLanguageChange",
-		 * "Click here to change your language"); }
-		 */
+		Profile profile = profileRepository.findByUser(this.sessionManager.getLoggedInUser());
 
-		Page<Post> page = postRepository.findAll(PageRequest.of(pageNumber - 1, PAGE_SIZE, Sort.by(Order.desc("id"))));
-		model.addAttribute("posts", page);
+		if (profile.getLanguages().size() == 1) {
+			Page<Post> postPage = postRepository.findAllByPostLanguage(profile.getLanguages().get(0),
+					PageRequest.of(pageNumber - 1, PAGE_SIZE, Sort.by(Order.desc("id"))));
+			model.addAttribute("posts", postPage);
+
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				if (profile.getLanguages().get(0) != Language.ENGLISH) {
+					redirect.addFlashAttribute("warning", "Votre langue choisie ne figure pas sur votre profil. "
+							+ "Veuillez changer votre langue ou ajouter la langue actuelle à votre profil.");
+					return "redirect:/app/profile/" + profile.getId();
+				}
+				model.addAttribute("languageMessage", "Your language is English");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				if (profile.getLanguages().get(0) != Language.FRENCH) {
+					redirect.addFlashAttribute("warning", "Your chosen language is not listed on your profile. "
+							+ "Please change your language or add the current one to your profile's langauges");
+					return "redirect:/app/profile/" + profile.getId();
+				}
+				model.addAttribute("languageMessage", "Votre Langue Est Français");
+			}
+		}
+
+		if (profile.getLanguages().size() == 2) {
+
+			Page<Post> postPage = postRepository
+					.findAll(PageRequest.of(pageNumber - 1, PAGE_SIZE, Sort.by(Order.desc("id"))));
+			model.addAttribute("posts", postPage);
+
+			// model.addAttribute("multipleLanguageMessage", "");
+			model.addAttribute("languageChange", "change your language");
+
+			if (whichLocale.equals(Locale.ENGLISH)) {
+				if (profile.getPreferredLanguage().equals(Language.ENGLISH))
+					model.addAttribute("languageMessage", "Your languages are English and French");
+				if (profile.getPreferredLanguage().equals(Language.FRENCH))
+					model.addAttribute("languageMessage", "Your languages are French and English");
+			}
+
+			if (whichLocale.equals(Locale.FRENCH)) {
+				if (profile.getPreferredLanguage().equals(Language.FRENCH))
+					model.addAttribute("languageMessage", "Vos Langues Sont Français et Anglais");
+				if (profile.getPreferredLanguage().equals(Language.ENGLISH))
+					model.addAttribute("languageMessage", "Vos Langues Sont Anglais et Français");
+			}
+		}
+
 		return "timeline";
 	}
 
-	/*
-	 * private boolean numberOfLanguages() { return
-	 * this.sessionManager.getLoggedInUser().getProfile().getLanguages().size() ==
-	 * 2; }
-	 */
-
 	private boolean isLoggedIn() {
 		return !sessionManager.isLoggedIn();
+	}
+
+	@Bean
+	public LocaleResolver localeResolverforTimeline() {
+		SessionLocaleResolver r = new SessionLocaleResolver();
+		r.setLocaleAttributeName(LOCALE_ATTR);
+		return r;
 	}
 }

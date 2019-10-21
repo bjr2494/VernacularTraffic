@@ -6,13 +6,13 @@ import javax.validation.constraints.Size;
 public class RegistrationAttempt {
 	
 	@NotEmpty
-	@Size(min=5, max=15, message="between five and fifteen characters for the username, please")
+	//@Size(min=5, max=15, message="between five and fifteen characters for the username, please")
 	private String username;
 	@NotEmpty
-	@Size(min=5, max=15, message="between five and fifteen characters, please")
+	//@Size(min=5, max=15, message="between five and fifteen characters, please")
 	private String passwordOne;
 	@NotEmpty
-	@Size(min=5, max=15, message="between five and fifteen characters, please")
+	//@Size(min=5, max=15, message="between five and fifteen characters, please")
 	private String passwordTwo;
 	
 	public String getUsername() {

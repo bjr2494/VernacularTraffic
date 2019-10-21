@@ -12,33 +12,280 @@
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
 
-<title data-th-text="|Time to Edit the Post Called ${post.name}|"></title>
+<title data-th-text="|#{editPostTitle}|"></title>
 </head>
 <body>
-	<div data-th-if="${post.author.id == @sessionManager.loggedInUser.id}">
-		<h1>Go On and EDIT Your Post</h1>
-		<br />
+		<h1>
+			<span data-th-text="|#{editPostFirstHeader}"></span> <span
+				class="alert alert-warning" data-th-text="${post.name}"></span> <span
+				data-th-text="|, ${@sessionManager.loggedInUser.username}|"></span>
+			<br />
+		</h1>
+		<h2>
+			<a data-th-href="|/app/timeline|"
+				data-th-text="|#{toTimelineFromPost}|">Or Go Back to the
+				Timeline</a>
+		</h2>
 		<form method="POST" data-th-action="|/app/editPost/${postId}|"
 			data-th-object="${post}">
-			<label align="center" for="name of post">Name of Post</label> <input
-				type="text" size="30" class="form-control"
-				placeholder="Please give the post a decent name"
+			<label align="center" for="name of post" class="alert alert-warning"
+				data-th-text="#{postName}">Name of Post</label> <input type="text"
+				size="30" class="form-control"
+				data-th-placeholder="#{editPostNamePlaceholder}"
 				data-th-errorclass="is-invalid" data-th-field="*{name}" />
 			<div class="invalid-feedback" data-th-errors="*{name}"></div>
-			<label align="center" for="content of post">The Post Itself</label>
-			<textarea
-				placeholder="At least five characters and no more than one-hundred and fifty"
+			<label align="center" for="content of post"
+				class="alert alert-warning" data-th-text="#{postContent}">The
+				Post Itself</label>
+			<textarea class="form-control" data-th-placeholder="#{editPostContentPlaceholder}"
 				rows="6" cols="150" data-th-errorclass="is-invalid"
 				data-th-field="*{content}">
 			</textarea>
 			<div class="invalid-feedback" data-th-errors="*{content}"></div>
-			<button type="submit" class="btn btn-primary">Edit It</button>
+
+			<div data-th-if="${extraLetters}">
+				<br />
+				<h3>Les Lettres Accentuées</h3>
+				<table class="table table-bordered">
+
+					<tbody>
+					<thead>
+						<tr>
+							<th scope="row"></th>
+							<td>a accent grave</td>
+							<td>a-e entrelacé</td>
+							<td>e accent grave</td>
+							<td>e accent aigu</td>
+							<td>e circonflexe</td>
+							<td>e tréma</td>
+							<td>i circonflexe</td>
+							<td>i tréma</td>
+							<td>o circonflexe</td>
+							<td>u circonflexe</td>
+							<td>c cédille</td>
+							<td>o-e entrelacé</td>
+						</tr>
+					</thead>
+					<tr>
+						<th scope="row">en miniscule</th>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); aAccentGraveLC()">&#224;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); aeEntrelaceLC()">&#230;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eAccentGraveLC()">&#232;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eAccentAiguLC()">&#233;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eCirconflexeLC()">&#234;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eTremaLC()">&#235;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); iCirconflexeLC()">&#238;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); iTremaLC()">&#239;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); oCirconflexeLC()">&#244;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); uCirconflexeLC()">&#251;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); cCedilleLC()">&#231;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); oeEntrelaceLC()">&#339;</button>
+						</span></td>
+					</tr>
+					<tr>
+						<th scope="row">en majuscule</th>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); aAccentGraveUC()">&#192;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); aeEntrelaceUC()">&#198;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eAccentGraveUC()">&#200;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eAccentAiguUC()">&#201;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eCirconflexeUC()">&#202;</button>
+						</span></td>
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); eTremaUC()">&#203;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); iCirconflexeUC()">&#206;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); iTremaUC()">&#207;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); oCirconflexeUC()">&#212;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); uCirconflexeUC()">&#219;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); cCedilleUC()">&#199;</button>
+						</span></td>
+
+						<td><span>
+								<button class="btn btn-primary"
+									onClick="event.preventDefault(); oeEntrelaceUC()">&#338;</button>
+						</span></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<button type="submit" class="btn btn-primary"
+				data-th-text="#{submitButtonEditPost}">Edit It</button>
 		</form>
-	</div>
-	<div data-th-unless="${post.author.id == @sessionManager.loggedInUser.id}">
-		<h1>This is not your post to tinker with.</h1>
-		<h2><a data-th-href="|/app/timeline|">Back to the timeline</a></h2>
-	</div>
+
+	<script>
+		const aAccentGraveLC = () => {
+			document.getElementById("text").value+= "\u00E0";
+		}
+		
+		const aeEntrelaceLC = () => {
+			document.getElementById("text").value+= "\u00E6";
+		}
+		
+		const eAccentGraveLC = () => {
+			document.getElementById("text").value+= "\u00E8";
+		}
+		
+		const eAccentAiguLC = () => {
+			document.getElementById("text").value+= "\u00E9";
+		}
+		
+		const eCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00EA";
+		}
+		
+		const eTremaLC = () => {
+			document.getElementById("text").value+= "\u00EB";
+		}
+		
+		const iCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00EE";
+		}
+		
+		const iTremaLC = () => {
+			document.getElementById("text").value+= "\u00EF";
+		}
+		
+		const oCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00F3";
+		}
+		
+		const uCirconflexeLC = () => {
+			document.getElementById("text").value+= "\u00FB";
+		}
+		
+		const cCedilleLC = () => {
+			document.getElementById("text").value+= "\u00E7";
+		}
+		
+		const oeEntrelaceLC = () => {
+			document.getElementById("text").value+= "\u0153";
+		}
+		
+		
+		const aAccentGraveUC = () => {
+			document.getElementById("text").value+= "\u00C0";
+		}
+		
+		const aeEntrelaceUC = () => {
+			document.getElementById("text").value+= "\u00C6";
+		}
+		
+		const eAccentGraveUC = () => {
+			document.getElementById("text").value+= "\u00C8";
+		}
+		
+		const eAccentAiguUC = () => {
+			document.getElementById("text").value+= "\u00C9";
+		}
+		
+		const eCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00CA";
+		}
+		
+		const eTremaUC = () => {
+			document.getElementById("text").value+= "\u00CB";
+		}
+		
+		const iCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00CE";
+		}
+		
+		const iTremaUC = () => {
+			document.getElementById("text").value+= "\u00CF";
+		}
+		
+		const oCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00D4";
+		}
+		
+		const uCirconflexeUC = () => {
+			document.getElementById("text").value+= "\u00DB";
+		}
+		
+		const cCedilleUC = () => {
+			document.getElementById("text").value+= "\u00C7";
+		}
+		
+		const oeEntrelaceUC = () => {
+			document.getElementById("text").value+= "\u0152";
+		}
+	
+	</script>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

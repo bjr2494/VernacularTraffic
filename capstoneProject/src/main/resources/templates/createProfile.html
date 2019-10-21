@@ -1,65 +1,93 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
 
-    <title>Profile for New User</title>
-  </head>
-  <body>
-    <h1 data-th-text="|Welcome to the app, ${@sessionManager.loggedInUser.username}|"></h1>
-    <h2>Now is the Time to Fill Out Your Profile</h2>
-    <h4>Choose Any Language, or Two of Them, or All Three</h4>
-    
-    <form data-th-action="|/app/createProfile/${@sessionManager.loggedInUser.id}|" method="POST" data-th-object="${profile}">
-    	<div align="center" class="form-group">
-    		<label for="firstName"></label>
-    		<input class="form-control" size="50" type="text" id="firstName" placeholder="your first name"
-    				data-th-field="*{firstName}" data-th-errorclass="is-invalid" />
-   				<div class="invalid-feedback" data-th-errors="*{firstName}" ></div>
-    	</div>
-    	<div align="center" class="form-group">
-    		<label for="lastName"></label>
-    		<input class="form-control"  size="50" type="text" id="lastName" placeholder="your last name"
-    				data-th-field="*{lastName}" data-th-errorclass="is-invalid" />
-   				<div class="invalid-feedback" data-th-errors="*{lastName}" ></div>
-    	</div>
-    	<div align="center" class="form-group">
-    		<label for="age"></label>
-    		<input class="form-control"  size="50" type="text" id="age" placeholder="your age"
-    				data-th-field="*{age}" data-th-errorclass="is-invalid" />
-   				<div class="invalid-feedback" data-th-errors="*{age}" ></div>
-    	</div>
-    	<div align="center">
-    		<span 
-    		class="alert alert-info">Please first press the control key if you wish to choose more than one language</span>
-    		<br /><br />
-    	</div>
-    	<div align="center" class="form-group"> 
-    		<select class="form-control"  multiple data-th-errorclass="is-invalid" data-th-field="*{languages}">
-				<option data-th-each="language : ${T(acc.capstone.Language).values()}"
-							data-th-value="${language}"
-							data-th-text="${language}"></option>
+<title data-th-text="#{titleCreateProfile}">Profile for New User</title>
+</head>
+<body>
+	<h2 data-th-if="${error}">
+		<span class="alert alert-danger" data-th-text="${error}"></span>
+	</h2>
+	<h1
+		data-th-text="|#{welcomeCreateProfile}, ${@sessionManager.loggedInUser.username}|"></h1>
+	<h2 data-th-text="#{messageToFinishCreatingProfile}">Now is the
+		Time to Fill Out Your Profile</h2>
+	<h4 data-th-text="#{languageChoiceProfileCreation}">Choose One
+		Language or Both</h4>
+
+	<form
+		data-th-action="|/app/createProfile/${@sessionManager.loggedInUser.id}|"
+		method="POST" data-th-object="${profile}">
+		<div align="center" class="form-group">
+			<label for="firstName"></label> <input class="form-control" size="50"
+				type="text" id="firstName"
+				data-th-placeholder="#{firstNameCreateProfile}"
+				data-th-field="*{firstName}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{firstName}"></div>
+		</div>
+		<div align="center" class="form-group">
+			<label for="lastName"></label> <input class="form-control" size="50"
+				type="text" id="lastName"
+				data-th-placeholder="#{lastNameCreateProfile}"
+				data-th-field="*{lastName}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{lastName}"></div>
+		</div>
+		<div align="center" class="form-group">
+			<label for="age"></label> <input class="form-control" size="50"
+				type="text" id="age" data-th-placeholder="#{ageCreateProfile}"
+				data-th-field="*{age}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{age}"></div>
+		</div>
+		<div align="center" class="form-group">
+			<label for="email"></label> <input class="form-control" size="50"
+				type="text" id="emailAddress"
+				data-th-placeholder="#{emailAddressCreateProfile}"
+				data-th-field="*{emailAddress}" data-th-errorclass="is-invalid" />
+			<div class="invalid-feedback" data-th-errors="*{emailAddress}"></div>
+		</div>
+		<div align="center">
+			<span class="alert alert-info"
+				data-th-text="#{languagesCreateProfile}"> Please first press
+				the control key if you wish to choose more than one language</span> <br />
+			<br />
+		</div>
+		<div align="center" class="form-group">
+			<select class="form-control" multiple data-th-errorclass="is-invalid"
+				data-th-field="*{languages}">
+				<option
+					data-th-each="language : ${T(acc.capstone.Language).values()}"
+					data-th-value="${language}"
+					data-th-text="${#messages.msg(language)}"></option>
 			</select>
-	  				<div class="invalid-feedback" data-th-errors="*{languages}"></div>
-    	</div>
-    	<div align="center" class="form-group">
-    		<label for="email"></label>
-    		<input class="form-control" size="50" type="text" id="emailAddress" placeholder="your email address"
-    				data-th-field="*{emailAddress}" data-th-errorclass="is-invalid" />
-   				<div class="invalid-feedback" data-th-errors="*{emailAddress}" ></div>
-    	</div>
-    			<button type="submit" class="btn btn-secondary">Onward</button>
-    </form>
+			<div class="invalid-feedback" data-th-errors="*{languages}"></div>
+		</div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+		<button type="submit" class="btn btn-secondary"
+			data-th-text="#{submitButtonCreateProfile}">Onward</button>
+	</form>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
 </html>

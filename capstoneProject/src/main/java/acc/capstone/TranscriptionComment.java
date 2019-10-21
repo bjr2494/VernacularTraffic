@@ -34,8 +34,8 @@ public class TranscriptionComment {
 	@OneToOne
 	@JsonBackReference
 	private Profile profile;
-	@NotEmpty(message="we disallow empty comments")
-	@Size(min=4, max=60, message="between 4 and 60 characters, please")
+	//@NotEmpty(message="we disallow empty comments")
+	//@Size(min=4, max=60, message="between 4 and 60 characters, please")
 	private String content;
 	private boolean deletableByAuthor;
 	@Enumerated(EnumType.STRING)

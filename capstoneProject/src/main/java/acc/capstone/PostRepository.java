@@ -23,4 +23,6 @@ public interface PostRepository extends CrudRepository<Post, Long> {
 
 	public Page<Post> findAll(Pageable pageable);
 
+	public Page<Post> findAllByPostLanguage(Language language, Pageable pageable);
+
 }

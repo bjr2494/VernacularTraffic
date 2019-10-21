@@ -24,17 +24,16 @@ public class PostComment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JsonBackReference
+	//@JsonBackReference
 	private Post post;
 	private LocalDate commentDate;
 	private LocalTime commentTime;
 	@ManyToOne
 	private User author;
 	@ManyToOne
-	@JsonBackReference
 	private Profile profile;
-	@NotEmpty(message = "we disallow empty comments")
-	@Size(min = 4, max = 60, message = "between 4 and 60 characters, please")
+	//@NotEmpty(message = "we disallow empty comments")
+	//@Size(min = 4, max = 60, message = "between 4 and 60 characters, please")
 	private String content;
 	private boolean deletableByAuthor;
 	@Enumerated(EnumType.STRING)
@@ -114,7 +113,14 @@ public class PostComment {
 
 	@Override
 	public String toString() {
-		return content;
+		return "PostComment [id=" + id + ", profile=" + profile + ", deletableByAuthor=" + deletableByAuthor + "]";
 	}
 
+	
+
+
+
+	
+
+	
 }

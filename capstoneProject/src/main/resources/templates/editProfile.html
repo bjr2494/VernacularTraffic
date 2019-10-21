@@ -12,55 +12,65 @@
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
 
-<title>Hello, world!</title>
+<title data-th-text="#{editProfileTitle}"></title>
 </head>
 <body>
 	<h1
-		data-th-text="|Edit Your Profile, ${@sessionManager.loggedInUser.username}"></h1>
+		data-th-text="|#{editProfileTitle}, ${@sessionManager.loggedInUser.username}|"></h1>
 	<h2>
-		<a data-th-href="|/app/timeline|">Back to the Timeline</a>
+		<a data-th-href="|/app/timeline|" data-th-text="#{toTimelineFromPost}">Back to the Timeline</a>
 	</h2>
 	<br />
+	<h5 data-th-if="${failure}">
+		<span class="alert alert-danger" data-th-text="${failure}"></span>
+		<br />
+	</h5>
 	<form data-th-action="|/app/editProfile/${profile.id}|" method="POST"
 		data-th-object="${profile}">
 		<table class="table">
 			<thead>
 				<tr>
-					<th scope="col">First Name</th>
-					<th scope="col">Last Name</th>
-					<th scope="col">Age</th>
-					<span data-th-if="${profile.isOneLanguage == true}">
-						<th scope="col">Language</th>
+					<th scope="col" data-th-text="#{firstNameEditProfile}">First Name</th>
+					<th scope="col" data-th-text="#{lastNameEditProfile}">Last Name</th>
+					<th scope="col" data-th-text="#{ageEditProfile}">Age</th>
+					<span data-th-if="${profile.oneLanguage == true}">
+						<th scope="col" data-th-text="#{languageEditProfile}">Language</th>
 					</span>
-					<span data-th-unless="${profile.isOneLanguage == true}">
-						<th scope="col">Languages</th>
+					<span data-th-unless="${profile.oneLanguage == true}">
+						<th scope="col" data-th-text="#{languagesEditProfile}">Languages</th>
 					</span>
-					<th scope="col">Email Address</th>
+					<th scope="col" data-th-text="#{emailAddressEditProfile}">Email Address</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td><input class="form-control" type="text"
-						data-th-errorclass="is-invalid" data-th-field="*{firstName}" /></td>
+						data-th-errorclass="is-invalid" data-th-field="*{firstName}" />
+						<span class="invalid-feedback" data-th-errors="*{firstName}"></span>
+					</td>
+
 					<td><input class="form-control" type="text"
-						data-th-errorclass="is-invalid" data-th-field="*{lastName}"></td>
+						data-th-errorclass="is-invalid" data-th-field="*{lastName}">
+						<span class="invalid-feedback" data-th-errors="*{lastName}"></span>
+						</td>
+					
 					<td><input class="form-control" type="text"
-						data-th-errorclass="is-invalid" data-th-field="*{age}"></td>
+						data-th-errorclass="is-invalid" data-th-field="*{age}">
+						<span class="invalid-feedback" data-th-errors="*{age}"></span>
+						</td>
+					
 					<td><select class="form-control" multiple
 						data-th-errorclass="is-invalid" data-th-field="*{languages}">
 							<option
-								data-th-each="language : ${T(acc.capstone.Language).values()}"
-								data-th-value="${language}" data-th-text="${language}"></option>
-					</select></td>
+								data-th-each="language : *{languages}"
+								data-th-value="${language}" data-th-text="${#messages.msg(language)}"></option>
+					</select>
+					<span class="invalid-feedback" data-th-errors="*{languages}"></span>
+					</td>
 					<td><input class="form-control" type="text"
-						data-th-errorclass="is-invalid" data-th-field="*{emailAddress}"></td>
-				</tr>
-				<tr>
-					<td class="invalid-feedback" data-th-errors="*{firstName}"></td>
-					<td class="invalid-feedback" data-th-errors="*{lastName}"></td>
-					<td class="invalid-feedback" data-th-errors="*{age}"></td>
-					<td class="invalid-feedback" data-th-errors="*{languages}"></td>
-					<td class="invalid-feedback" data-th-errors="*{emailAddress}"></td>
+						data-th-errorclass="is-invalid" data-th-field="*{emailAddress}">
+						<span class="invalid-feedback" data-th-errors="*{emailAddress}"></span>
+						</td>
 				</tr>
 			</tbody>
 		</table>
@@ -68,7 +78,7 @@
 		<!-- Button trigger modal -->
 		<button type="button" class="btn btn-primary" data-toggle="modal"
 			data-target="#exampleModal"
-			data-th-text="|Save your changes, ${loggedInUser.username}|">
+			data-th-text="|#{saveChangesEditProfile}, ${@sessionManager.loggedInUser.username}|">
 		</button>
 
 		<!-- Modal -->
@@ -77,19 +87,19 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Profile
+						<h5 class="modal-title" id="exampleModalLabel" data-th-text="#{modalTitleEditProfile}">Profile
 							Changes</h5>
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">Are you sure that you want to make
+					<div class="modal-body" data-th-text="#{modalBodyEditProfile}">Are you sure that you want to make
 						these changes to your profile?</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Save the
+							data-dismiss="modal" data-th-text="#{closeModalEditProfile}">Close</button>
+						<button type="submit" class="btn btn-primary" data-th-text="#{openModalEditProfile}">Save the
 							changes</button>
 					</div>
 				</div>
