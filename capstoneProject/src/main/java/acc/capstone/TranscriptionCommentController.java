@@ -150,6 +150,8 @@ public class TranscriptionCommentController {
 				// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
 				model.addAttribute("post", optionalTranscription.get().getPost());
 				model.addAttribute("transcription", optionalTranscription.get());
+				if (optionalTranscription.get().getTranscriptionLanguage().equals(Language.FRENCH))
+					model.addAttribute("extraLetters", "");
 				// model.addAttribute("transcriptionComment", transcriptionComment);
 				return "transcriptionComment";
 			} else {

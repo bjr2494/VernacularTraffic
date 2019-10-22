@@ -167,7 +167,7 @@
 				</div>
 				<div
 					data-th-if="${postComment.author.id == @sessionManager.loggedInUser.id}">
-					<span data-th-text="${postComment.post}"></span>
+					<!--<span data-th-text="${postComment.post}"></span>-->
 					<div data-th-if="${postComment.deletableByAuthor}">
 						<form data-th-id="|deletePostComment${postComment.id}|"
 							data-th-action="|/app/deletePostComment/${postComment.id}|"
@@ -183,7 +183,8 @@
 					<div data-th-if="${post.commentableByAuthor}">
 						<br />
 						<form method="GET" data-th-action="|/app/postComment/${post.id}|">
-							<button class="btn btn-outline-warning" type="submit">Comment on your own post</button>
+							<button class="btn btn-outline-warning" type="submit"
+								 data-th-text="#{commentOwnPostTimeline}">Comment on your own post</button>
 						</form>
 					</div>
 				</div>
@@ -280,7 +281,6 @@
 									#{transcriptionCommentTime} ${transcriptionComment.commentTime}|"></span>
 						</span> <br /> <br />
 					</div>
-					<span data-th-text="${transcriptionComment.deletableByAuthor}"></span>
 					<div
 						data-th-if="${transcriptionComment.author.id == @sessionManager.loggedInUser.id}">
 						<div data-th-if="${transcriptionComment.deletableByAuthor}">

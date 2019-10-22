@@ -169,14 +169,14 @@ public class LanguageController {
 		if (language.equals("en")) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			redirect.addFlashAttribute("message",
-					"Your working language (and soon-to-be post language, unless you change it again, is English");
+					"Your working language (and soon-to-be post language, unless you change it again) is English");
 			return "redirect:/app/post/" + profile.getId();
 		}
 		
 		if (language.equals("fr")) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			redirect.addFlashAttribute("message", "Le français est votre langue actuelle"
-					+ " (et votre prochaine langue de publication, à moins que vous ne la changiez à nouveau)");
+					+ " (et votre prochaine langue de publication, à moins que vous ne la changiez à nouveau) est le français)");
 			return "redirect:/app/post/" + profile.getId();
 		}
 		else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -248,21 +248,16 @@ public class LanguageController {
 			
 			if (preferredLanguage.getName().equals(Language.ENGLISH)) {
 				WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
+				redirect.addFlashAttribute("success",
+						"Hooray, " + sessionManager.getLoggedInUser().getUsername() + "! Your preferred language is English");
 			}
 			
 			if (preferredLanguage.getName().equals(Language.FRENCH)) {
 				WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
-			}
-
-			if (localeIsEnglish(whichLocale)) {
-				redirect.addFlashAttribute("success",
-						"Hooray, " + sessionManager.getLoggedInUser().getUsername() + "! Your preferred language is English");
-			}
-
-			if (localeIsFrench(whichLocale)) {
 				redirect.addFlashAttribute("success",
 						"Bravo, " + sessionManager.getLoggedInUser().getUsername() + "! Votre langue préférée est le français");
 			}
+
 			return "redirect:/app/timeline";
 		} else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);

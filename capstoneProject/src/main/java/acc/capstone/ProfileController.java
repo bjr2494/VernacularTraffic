@@ -72,15 +72,28 @@ public class ProfileController {
 			}
 			return "redirect:/app/login";
 		}
+		
+		Profile profile = this.profileRepository.findByUser(this.sessionManager.getLoggedInUser());
 		List<User> usersForProfilesPage = new ArrayList<>();
-
-		for (User user : this.userRepository.findAll()) {
-			if (user.getId() != this.sessionManager.getLoggedInUser().getId()) {
-				usersForProfilesPage.add(user);
+		
+		if (profile.getLanguages().size() == 2) {
+			for (User user : this.userRepository.findAll()) {
+				if (user.getId() != this.sessionManager.getLoggedInUser().getId()) {
+					usersForProfilesPage.add(user);
+				}
 			}
+			this.sessionManager.setUsers(usersForProfilesPage);
+		}
+		
+		if (profile.getLanguages().size() == 1) {
+			
+			for (User user : this.userRepository.findAll()) {
+				if (user.getProfile().getLanguages().contains(profile.getLanguages().get(0)))
+					usersForProfilesPage.add(user);
+			}
+			this.sessionManager.setUsers(usersForProfilesPage);
 		}
 
-		this.sessionManager.setUsers(usersForProfilesPage);
 		return "profiles";
 	}
 
@@ -105,6 +118,23 @@ public class ProfileController {
 		if (optionalUser.isPresent()) {
 
 			Profile profile = optionalUser.get().getProfile();
+			
+			if (this.sessionManager.getLoggedInUser().getProfile().getLanguages().size() == 1 &&
+					!profile.getLanguages().
+					contains(this.sessionManager.getLoggedInUser().getProfile().getLanguages().get(0))) {
+				if (whichLocale.equals(Locale.ENGLISH)) {
+					redirect.addFlashAttribute("failure", 
+							"The profile that you've chosen does not support your profile's language");
+					return "redirect:/app/timeline";
+				}
+				
+				if (whichLocale.equals(Locale.FRENCH)) {
+					redirect.addFlashAttribute("failure", 
+							"Le profil que vous avez choisi ne supporte pas la langue de votre profil");
+					return "redirect:/app/timeline";
+				}
+			}
+			
 			model.addAttribute("profile", profile);
 
 			List<Post> profilePosts = fetchPostsForGivenProfile(profile);
@@ -222,8 +252,6 @@ public class ProfileController {
 				}
 			}
 
-			this.cruxOfProfile(profile, errors, whichLocale);
-
 			if (errors.hasErrors()) {
 				// profile.setUser(this.sessionManager.getLoggedInUser());
 				model.addAttribute("profile", profile);
@@ -233,7 +261,9 @@ public class ProfileController {
 			else {
 				profile.setUser(this.sessionManager.getLoggedInUser());
 				profile.setId(optionalProfile.get().getId());
-
+				
+				this.cruxOfProfile(profile, errors, whichLocale);
+				
 				if (profile.getLanguages().size() == 1) {
 
 					if (twoProfileLangsToOneAndLanguageCheck(optionalProfile)) {
@@ -446,6 +476,8 @@ public class ProfileController {
 				// if profile's language count is greater than one
 				else {
 					profile.setOneLanguage(false);
+					this.extraProfileInfo(profile, optionalProfile);
+					
 					// arbitrarily and temporarily setting the profile's preferred language to the
 					// first choice
 					this.profileRepository.save(profile);

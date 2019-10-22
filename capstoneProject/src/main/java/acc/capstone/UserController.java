@@ -85,15 +85,15 @@ public class UserController {
 
 			for (User u : this.userRepository.findAll()) {
 				if (username.getUsername().equals(u.getUsername())) {
+					if (whichLocale.equals(Locale.ENGLISH)) {
+						errors.rejectValue("username", "bad value", "this username is taken already");
+					}
 
-				}
-				if (whichLocale.equals(Locale.ENGLISH)) {
-					errors.rejectValue("username", "bad value", "this username is taken already");
+					if (whichLocale.equals(Locale.FRENCH)) {
+						errors.rejectValue("username", "mauvaise valeur", "ce nom d'utilisateur est déjà pris");
+					}	
 				}
 
-				if (whichLocale.equals(Locale.FRENCH)) {
-					errors.rejectValue("username", "mauvaise valeur", "ce nom d'utilisateur est déjà pris");
-				}
 
 			}
 
@@ -118,7 +118,7 @@ public class UserController {
 				User user = optionalUser.get();
 				user.setUsername(username.getUsername());
 
-				// this.userRepository.save(user);
+				this.userRepository.save(user);
 				this.sessionManager.login(user);
 
 				if (whichLocale.equals(Locale.ENGLISH)) {
@@ -128,7 +128,7 @@ public class UserController {
 
 				if (whichLocale.equals(Locale.FRENCH)) {
 					redirect.addFlashAttribute("success", "Vous avez changé votre nom d'utilisateur avec succès en "
-							+ sessionManager.getLoggedInUser().getUsername() + "Profitez de votre nouvelle identité.");
+							+ sessionManager.getLoggedInUser().getUsername() + ". Profitez de votre nouvelle identité.");
 				}
 
 				return "redirect:/app/timeline";
@@ -142,7 +142,7 @@ public class UserController {
 
 		Locale whichLocale = localeResolverforUserController().resolveLocale(request);
 
-		if (isLoggedIn()) {
+		if (this.sessionManager.isLoggedIn()) {
 			if (whichLocale.equals(Locale.ENGLISH)) {
 				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
 			}
@@ -154,8 +154,8 @@ public class UserController {
 			return "redirect:/app/login";
 		}
 		
-		Profile profile = this.profileRepository.findByUser(this.sessionManager.getLoggedInUser());
-		if (alreadyLoggedIn() && profile != null) {
+		//Profile profile = this.profileRepository.findByUser(this.sessionManager.getLoggedInUser());
+		if (this.sessionManager.isLoggedIn() && this.sessionManager.getLoggedInUser().getProfile() != null) {
 			if (whichLocale.equals(Locale.ENGLISH)) {
 				redirect.addFlashAttribute("failure", "But of course you've registered!");
 			}
@@ -167,7 +167,7 @@ public class UserController {
 			return "redirect:/app/timeline";
 		}
 
-		if (alreadyLoggedIn() && profile == null) {
+		if (this.sessionManager.isLoggedIn() && this.sessionManager.getLoggedInUser().getProfile() == null) {
 			if (whichLocale.equals(Locale.ENGLISH)) {
 				redirect.addFlashAttribute("error",
 						"But you've already made your username and password. Please continue");

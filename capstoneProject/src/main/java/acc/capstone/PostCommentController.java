@@ -144,6 +144,8 @@ public class PostCommentController {
 			if (errors.hasErrors()) {
 				// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
 				model.addAttribute("post", optionalPost.get());
+				if (optionalPost.get().getPostLanguage().equals(Language.FRENCH))
+					model.addAttribute("extraLetters", "");
 				// model.addAttribute("postComment", postComment);
 				// model.addAttribute("contentError", errors.getFieldError("content"));
 				return "postComment";

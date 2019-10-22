@@ -36,7 +36,7 @@ public class TimelineController {
 	@Autowired
 	TranscriptionRepository transcriptionRepository;
 
-	@Autowired
+	@Autowired 
 	UserRepository userRepository;
 
 	@Autowired
