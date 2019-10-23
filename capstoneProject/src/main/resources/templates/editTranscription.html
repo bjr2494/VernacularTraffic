@@ -50,6 +50,7 @@
 					<th scope="col" data-th-text="#{stress2}">Secondary Stress</th>
 					<th scope="col" data-th-text="#{aspirated}">Aspirated</th>
 					<th scope="col" data-th-text="#{tilde}">Tilde</th>
+					<th scope="col" data-th-text="#{palatalized}">Palatalized</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -62,6 +63,8 @@
 							onClick="event.preventDefault(); aspirated()">&#688;</button></td>
 					<td><button class="btn btn-primary"
 							onClick="event.preventDefault(); tilde()">&#126;</button></td>
+					<td><button class="btn btn-primary"
+							onClick="event.preventDefault(); palatalized()">&#690;</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -967,6 +970,10 @@
 		
 		const tilde = () => {
 			document.getElementById("text").value+="\u007E";
+		}
+		
+		const palatalized = () => {
+			document.getElementById("text").value+="\u02B2";
 		}
 		
 		const nasalA = () => {

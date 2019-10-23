@@ -52,9 +52,6 @@ public class ProfileController {
 	@Autowired
 	SessionManager sessionManager;
 
-	@Autowired
-	ApplicationManager applicationManager;
-
 	private static final String LOCALE_ATTR = "language";
 
 	@GetMapping("/profiles")

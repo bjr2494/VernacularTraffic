@@ -29,12 +29,5 @@ public class CapstoneProjectApplication {
 	@SessionScope
 	SessionManager sessionManager() {
 		return new SessionManager();
-	}
-	
-	@Bean 
-	@ApplicationScope
-	ApplicationManager applicationManager() {
-		return new ApplicationManager();
-	}
-	
+	}	
 }

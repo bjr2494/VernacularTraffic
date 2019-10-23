@@ -50,6 +50,6 @@ public class Hash {
 
 	 public static void main(String[] args) { 
 		 String salt = generateSalt(); 
-		 System.out.println(salt + "**" + hash("tenthUser", salt));  
+		 System.out.println(salt + "**" + hash("greatWessex", salt));  
 	 }
 }

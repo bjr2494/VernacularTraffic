@@ -47,27 +47,28 @@ public class LanguageController {
 	@GetMapping("/registrationLanguagePreference/{language}")
 	public String registrationLanguagePreference(@PathVariable String language, HttpServletRequest request,
 			RedirectAttributes redirect) {
-		if (language.equals("en")) {
+		if (languageIsEnglish(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			return "redirect:/app/register";
 		}
 
-		if (language.equals("fr")) {
+		if (languageIsFrench(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			return "redirect:/app/register";
 		} else
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 	}
 
+
 	@GetMapping("/loginLanguagePreference/{language}")
 	public String loginLanguagePreference(@PathVariable String language, HttpServletRequest request,
 			RedirectAttributes redirect) {
 
-		if (language.equals("en")) {
+		if (languageIsEnglish(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			return "redirect:/app/login";
 		}
-		if (language.equals("fr")) {
+		if (languageIsFrench(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			return "redirect:/app/login";
 		} else
@@ -80,11 +81,11 @@ public class LanguageController {
 		
 		this.isLoggedIn();
 		
-		if (language.equals("en")) {
+		if (languageIsEnglish(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			return "redirect:/app/timeline";
 		}
-		if (language.equals("fr")) {
+		if (languageIsFrench(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			return "redirect:/app/timeline";
 		} else
@@ -98,11 +99,11 @@ public class LanguageController {
 		Locale whichLocale = localeResolver().resolveLocale(request);
 		
 		if (isLoggedIn()) {
-			if (whichLocale.equals(Locale.ENGLISH)) {
+			if (localeIsEnglish(whichLocale)) {
 				redirect.addFlashAttribute("message", "Why should you be allowed to do such as a non-logged-in user?");
 			}
 			
-			if (whichLocale.equals(Locale.FRENCH)) {
+			if (localeIsFrench(whichLocale)) {
 				redirect.addFlashAttribute("message", 
 						"Pourquoi devriez-vous être autorisé à faire comme utilisateur non connecté?");
 			}
@@ -119,7 +120,7 @@ public class LanguageController {
 			return "redirect:/app/timeline";
 		}
 		
-		if (language.equals("en")) {
+		if (languageIsEnglish(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			if (profile.getLanguages().size() == 1)
 				redirect.addFlashAttribute("message", "You've changed your language to English, which is your only language");
@@ -127,7 +128,7 @@ public class LanguageController {
 				redirect.addFlashAttribute("message", "You've changed your language to English");
 			return "redirect:/app/profile/" + profile.getId();
 		}
-		if (language.equals("fr")) {
+		if (languageIsFrench(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			if (profile.getLanguages().size() == 1)
 				redirect.addFlashAttribute("message", "Vous avez changé votre langue à français, lequel est votre seule langue");
@@ -166,14 +167,14 @@ public class LanguageController {
 			return "redirect:/app/timeline";
 		}
 		
-		if (language.equals("en")) {
+		if (languageIsEnglish(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.ENGLISH);
 			redirect.addFlashAttribute("message",
 					"Your working language (and soon-to-be post language, unless you change it again) is English");
 			return "redirect:/app/post/" + profile.getId();
 		}
 		
-		if (language.equals("fr")) {
+		if (languageIsFrench(language)) {
 			WebUtils.setSessionAttribute(request, LOCALE_ATTR, Locale.FRENCH);
 			redirect.addFlashAttribute("message", "Le français est votre langue actuelle"
 					+ " (et votre prochaine langue de publication, à moins que vous ne la changiez à nouveau) est le français)");
@@ -288,6 +289,15 @@ public class LanguageController {
 
 	private boolean whoseProfile(Optional<Profile> optionalProfile) {
 		return optionalProfile.get().getId() != this.sessionManager.getLoggedInUser().getId();
+	}
+	
+	private boolean languageIsEnglish(String language) {
+		return language.equals("en");
+	}
+	
+
+	private boolean languageIsFrench(String language) {
+		return language.equals("fr");
 	}
 
 	@Bean

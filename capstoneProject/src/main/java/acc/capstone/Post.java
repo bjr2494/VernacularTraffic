@@ -36,11 +36,7 @@ public class Post {
 	//@JsonBackReference
 	@ManyToOne
 	private Profile profile;
-	//@NotEmpty(message="we do not want any empty posts")
-	//@Size(min=10, max=120, message="between 10 and 120 characters, please")
 	private String content;
-	//@NotEmpty(message="a post needs a name, yeah?")
-	//@Size(min=4, max=25, message="between 4 and 25 characters, please")
 	private String name;
 	@OneToOne(mappedBy="post")
 	private Transcription transcription;
@@ -55,9 +51,6 @@ public class Post {
 	private boolean commentableByAuthor;
 	@Enumerated(EnumType.STRING)
 	private Language postLanguage; 
-	/*
-	 * @OneToMany(mappedBy="post") private List<Comment> postComments;
-	 */
 
 	public int getId() {
 		return id;

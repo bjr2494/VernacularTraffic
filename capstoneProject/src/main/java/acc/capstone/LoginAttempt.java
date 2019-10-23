@@ -24,6 +24,6 @@ public class LoginAttempt {
 	
 	@Override
 	public String toString() {
-		return username;
+		return "LoginAttempt [username= " + username;
 	}
 }

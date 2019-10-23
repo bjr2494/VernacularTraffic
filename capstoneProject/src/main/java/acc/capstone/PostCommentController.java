@@ -86,8 +86,6 @@ public class PostCommentController {
 			}
 
 			model.addAttribute("post", optionalPost.get());
-			// model.addAttribute("profile", optionalPost.get().getProfile());
-			// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
 
 			if (whichLocale.equals(Locale.ENGLISH) && optionalPost.get().getPostLanguage().equals(Language.FRENCH)) {
 				redirect.addFlashAttribute("languageIssue",
@@ -142,12 +140,9 @@ public class PostCommentController {
 				}
 			}
 			if (errors.hasErrors()) {
-				// model.addAttribute("loggedInUser", sessionManager.getLoggedInUser());
 				model.addAttribute("post", optionalPost.get());
 				if (optionalPost.get().getPostLanguage().equals(Language.FRENCH))
 					model.addAttribute("extraLetters", "");
-				// model.addAttribute("postComment", postComment);
-				// model.addAttribute("contentError", errors.getFieldError("content"));
 				return "postComment";
 			} else {
 
@@ -178,7 +173,6 @@ public class PostCommentController {
 					post.setHasOneComment(false);
 				}
 
-				// List<PostComment> postComments = new ArrayList<>();
 				for (PostComment pc : this.postCommentRepository.findAll()) {
 					if (pc.getPost().getId() == postComment.getPost().getId()) {
 						pc.setDeletableByAuthor(false);
@@ -291,7 +285,6 @@ public class PostCommentController {
 			int numPostComments = post.getNumPostComments();
 			numPostComments--;
 			post.setNumPostComments(numPostComments);
-			System.out.println(post.getNumPostComments());
 			if (numPostComments == 1) {
 				post.setHasOneComment(true);
 

@@ -118,19 +118,20 @@ public class LoginController {
 	@PostMapping("/logout")
 	public String logout(RedirectAttributes redirect, HttpServletRequest request) {
 		Locale whichLocale = localeResolverforLoginController().resolveLocale(request);
-		String username = sessionManager.getLoggedInUser().getUsername();
+		String username = this.sessionManager.getLoggedInUser().getUsername();
 		if (whichLocale.equals(Locale.ENGLISH)) {
-			redirect.addFlashAttribute("message", "Until next time," + username +
+			redirect.addFlashAttribute("message", "Until next time, " + username +
 					", which can be right now if you want to log-in again immediately" );
 		}
 		
 		if (whichLocale.equals(Locale.FRENCH)) {
 			redirect.addFlashAttribute("message", 
-					"jusqu'à la prochaine fois," + username + 
+					"jusqu'à la prochaine fois, " + username + 
 					", ce qui peut être maintenant si vous souhaitez vous reconnecter immédiatement");
 		}
+		
 		this.sessionManager.logout();
-		//return "redirect:/app/login?x=" + username;
+
 		return "redirect:/app/login";
 	}
 	

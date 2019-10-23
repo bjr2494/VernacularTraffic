@@ -6,12 +6,12 @@ INSERT INTO PROFILE
 VALUES
 (1, 'boudica', 'iceni', 23, 'boudicaiceni@hotmail.com', true, false, false, false, true, false, true, true, false,
 	'ENGLISH', 2, 0, 2, 1),
-(2, 'hasdrubal', 'benes', 24, 'hasben@gmail.com', true, false, false, true, false, false, false, false, false, 
+(2, 'hasdrubal', 'benes', 24, 'hasben@gmail.com', true, false, true, true, false, false, false, false, false, 
 	'ENGLISH', 2, 0, 0, 0),
 (3, 'yanis', 'caron', 27, 'dcerv@yahoo.com', true, false, false, false, false, false, false, false, true, 
 	'ENGLISH', 2, 0, 0, 0),
-(4, 'chantal', 'lune', 26, 'chantealalune@gmail.com', true, false, true, true, false, false, false, false, true, 
-	'FRENCH', 2, 1, 0, 0),
+(4, 'chantal', 'lune', 26, 'chantealalune@gmail.com', true, false, true, true, true, true, false, false, true, 
+	'FRENCH', 2, 1, 1, 0),
 (5, 'agnes', 'winthrop', 22, 'agwin@hotmail.com', true, false, false, false, false, false, false, false, true,
 	'FRENCH', 2, 1, 0, 0),
 (6, 'adasse', 'dimanche', 25, 'addo@gmail.com', true, false, false, false, false, false, true, true, true, 
@@ -54,13 +54,13 @@ INSERT INTO USER
 (id, username, password, salt, join_date, profile_id)
 VALUES
 (1, 'boudica234', 'P21JR6AZbMMkcRMFvfL2iJ4utkf4sCME9oUPXY3gmY0=', 'JdD8bg==', '2018-04-19', 1),
-(2, 'hasdrubal543', 'theFairest', '', '2018-05-22', 2),
-(3, '$yanis$', 'unCaron', '', '2018-06-18', 3),
-(4, 'chantallll', 'chanteuse', '', '2018-07-22', 4),
-(5, 'agneau', 'uniglot', '', '2018-08-15', 5),
-(6, 'adasse3', 'addasseTrois', '', '2018-09-04', 6),
+(2, 'hasdrubal543', 'jr6KMOtmZHyrDgVqubKZqy8CUp9oU4WMNUeDKaaTdiI=', 'WxUVWg==', '2018-05-22', 2),
+(3, '$yanis$', 'VMd1t84unTTIfx2Z6zjTIJGmXGAyIK5YzUqsaubQivM=', 'psKMMA==', '2018-06-18', 3),
+(4, 'chantallll', 'VMd1t84unTTIfx2Z6zjTIJGmXGAyIK5YzUqsaubQivM=', 'psKMMA==', '2018-07-22', 4),
+(5, 'agneau', '4UgHmDhPjn0TV+qUZHpezVkVbnBOJgAWVRUPlMFlXK0=', 'p5Yncg==', '2018-08-15', 5),
+(6, 'adasse3', '8ZY1jTjA4AHtUE0qB2Pg6Ujs40NZjzYbuAAEN3h+dtM=', 'lu/8vg==', '2018-09-04', 6),
 (7, 'vincent45', 'jWBvcmm1eyJsiJrsYF4pW7o2/tyakGs2h1FA7BH5si4=', 'av++Kg==', '2018-10-17', 7),
-(8, 'alfredG', 'greatWessex', '', '2018-11-25', 8),
+(8, 'alfredG', 'zuNVXnraBjUqZYI531Tuq2Ec+natwmrhZ47QkkNa1AQ=', 'FAjB/g==', '2018-11-25', 8),
 (9, 'bonjourMonde', 'iP//gBu6VSwFDfOKQ2IR1tW4J2UtOIfM7O8Kc45W9LE=', 'Ur1NAg==', '2018-11-26', 9), 
 (10, 'tenthUser', '/YP0WTdoOP1hpODiD/jvNDdXXa9xbPOkLkDlFkzm8as=', 'MwmpjQ==', '2019-10-17', 10);
 
@@ -101,7 +101,7 @@ VALUES
 	true, false, true, false, 'FRENCH', 0),
 (16, '2019-07-23', '10:30:36', 8, 8, 'If you judge people, you have no time to love them.', 'Judgment', false, false, true,
 	false, true, false, 'ENGLISH', 0),
-(17, '2019-08-23', '10:30:36', 9, 9, 'abcdéfghijklmnop', 'abcdéfgh', false, false, true, false, true, false, 
+(17, '2019-08-23', '10:30:36', 9, 9, 'j''ai besoin des sacs pour manger', 'des sacs', false, false, true, false, true, false, 
 	'FRENCH', 0);
 
 --INSERT INTO POST_POST_LANGUAGE
@@ -149,21 +149,24 @@ VALUES
 (1, 'Transcription of ''concerned''', '2018-12-25', '06:30:03', 2, 8, 8,
 	'tu bi ˈhæpi, wi mʌst nɑt bi tu kənˈsɜrnd wɪð ˈʌðərz', true, false, true, false, true, 'ENGLISH', 1),
 (2, 'Transcription of ''Beautiful''', '2019-01-07', '05:43:43', 8, 1, 1,
-	'THIS IS NOT REALLY A TRANSCRIPTION', true, false, false, false, true, 'ENGLISH', 2),
-(3, 'Transcription of ''Tree''', '2019-01-01', '05:30:30', 3, 1, 1, 'me tree yeah me tree', false, true, false, true, false,
-		'ENGLISH', 0);
+	'ðʌ ˈbʲutɪˌfəl ɪz ɑlfɰɛɪz stɹɘɪnj', true, false, false, false, true, 'ENGLISH', 2),
+(3, 'Transcription of ''Tree''', '2019-01-01', '05:30:30', 3, 1, 1, 'tɹi ʌv hop, stænd fɘɹm', false, true, false, true, false,
+		'ENGLISH', 0),
+(4, 'Transcription de La Choix de La Vie', '2019-03-02', '03:27:03', 7, 4, 4, 'imɒʒiˈne se ʃɰɒziəʀ', true, false, 
+	true, false, true, 'FRENCH', 0);
 
 INSERT INTO POST_COMMENT
 (id, post_id, comment_Date, comment_Time, author_id, profile_id, content, deletable_By_Author, post_Comment_Language)
 VALUES
-(1, 4, '2018-08-17', '14:23:13', 4, 4, 'Est-ce que ca devrait etre ''d''equipe'' plutot qu''une equipe?', true, 'FRENCH'),
-(2, 10, '2019-01-02', '23:32:03', 5, 5, 'C''est un commentaire de post', true, 'FRENCH'),
+(1, 4, '2018-08-17', '14:23:13', 4, 4, 'Est-ce que ça devrait être ''d''équipe'' plutot qu''une équipe?', true, 'FRENCH'),
+(2, 10, '2019-01-02', '23:32:03', 5, 5, 'Mes livres de livres ont chaudes', true, 'FRENCH'),
 (3, 1, '2019-01-04', '06:34:35', 7, 7, 'Is she unfit?', true, 'ENGLISH');
 
 INSERT INTO TRANSCRIPTION_COMMENT
 (id, transcription_id, comment_Date, comment_Time, author_id, profile_id, content, deletable_By_Author, 
 	transcription_Comment_Language)
 VALUES
-(1, 2, '2019-01-08', '14:32:51', 8, 8, 'What was she thinking with that transcription?', false, 'ENGLISH'),
-(2, 1, '2019-02-06', '08:25:58', 6, 6, 'I love this transcription', true, 'ENGLISH'),
-(3, 2, '2019-01-09', '16:02:35', 1, 1, 'Obviously t''is not a real transcription, Alfred the Okay', true, 'ENGLISH');
+(1, 2, '2019-01-08', '14:32:51', 8, 8, 'I don''t like the transcription of ''strange''', false, 'ENGLISH'),
+(2, 1, '2019-02-06', '08:25:58', 6, 6, 'Great transcription!', true, 'ENGLISH'),
+(3, 2, '2019-01-09', '16:02:35', 1, 1, 'Blame the creator of this app, Alfred the Okay', true, 'ENGLISH'), 
+(4, 4, '2019-03-03', '14:15:36', 2, 2, 'Pourquoi est-ce que tu n''as pas transcrit le point?', true, 'FRENCH');

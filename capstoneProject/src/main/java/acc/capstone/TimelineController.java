@@ -45,9 +45,6 @@ public class TimelineController {
 	@Autowired
 	SessionManager sessionManager;
 
-	@Autowired
-	ApplicationManager applicationManager;
-
 	private final static int PAGE_SIZE = 5;
 	private static final String LOCALE_ATTR = "language";
 
