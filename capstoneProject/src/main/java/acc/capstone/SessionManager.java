@@ -12,8 +12,6 @@ public class SessionManager {
 	UserRepository userRepository;
 	
 	private User loggedInUser = null;
-	
-
     private List<User> users;
 	private int numProfiles;
 	private int numPosts;

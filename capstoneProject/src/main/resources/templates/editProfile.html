@@ -62,7 +62,7 @@
 					<td><select class="form-control" multiple
 						data-th-errorclass="is-invalid" data-th-field="*{languages}">
 							<option
-								data-th-each="language : *{languages}"
+								data-th-each="language : ${T(acc.capstone.Language).values()}"
 								data-th-value="${language}" data-th-text="${#messages.msg(language)}"></option>
 					</select>
 					<span class="invalid-feedback" data-th-errors="*{languages}"></span>
