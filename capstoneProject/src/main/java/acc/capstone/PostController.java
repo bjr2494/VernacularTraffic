@@ -356,9 +356,6 @@ public class PostController {
 				this.postRepository.delete(optionalPost.get());
 				this.postRepository.save(post);
 
-				// authorProfile.getPosts().add(newPost);
-				// this.profileRepository.save(authorProfile);
-
 				if (whichLocale.equals(Locale.ENGLISH)) {
 					redirect.addFlashAttribute("success", "Here is your freshly edited post called " + post.getName()
 							+ ", " + sessionManager.getLoggedInUser().getUsername());
